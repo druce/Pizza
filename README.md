@@ -4,6 +4,8 @@ Find highest rated pizza (or other query string) in Google Maps by distance from
 - conda install -c conda-forge gmaps
 - jupyter nbextension enable --py gmaps
 
+Results
+
 - 5 Brooklyn Pizza
 - 4.7 Baciccia Pizza e Cucina
 - 4.7 L'Arte Della Pizza Brooklyn
