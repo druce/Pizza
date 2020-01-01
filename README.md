@@ -55,9 +55,4 @@ Find highest rated pizza (or other query string) in Google Maps by distance from
 | 4.1 | Metro Star |
 | 4.1 | Giardini Pizza |
 | 4.1 | Monty Q's |
-| 4 P |ronto Pizza |
-| 3.9 | Pipitone's |
-| 3.9 | Antonio's Pizzeria |
-| 3.8 | Angelica |
-| 3.7 | Caruso's |
 
