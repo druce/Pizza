@@ -4,8 +4,8 @@ Find highest rated pizza (or other query string) in Google Maps by distance from
 - conda install -c conda-forge gmaps
 - jupyter nbextension enable --py gmaps
 
-| Rating        | Name          | 
-| ------------- |:-------------:|
+| Rating        | Name        | 
+| ------------- |-------------|
 | 4.7 | MAMA MARIA'S |
 | 4.6 | Luigi's Pizza |
 | 4.6 | Barboncino Pizza |
