@@ -1,8 +1,11 @@
 Find highest rated pizza (or other query string) in Google Maps by distance from a location
 
+Needs a Google API key in apikey.txt, get one from [GCP](https://console.cloud.google.com/google/maps-apis/credentials)
+
 - conda install jupyter_contrib_nbextensions
 - conda install -c conda-forge gmaps
 - jupyter nbextension enable --py gmaps
+
 
 | Rating        | Name        | 
 | ------------- |-------------|
