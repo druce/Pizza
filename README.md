@@ -1,10 +1,17 @@
 Find highest rated pizza (or other query string) in Google Maps by distance from a location
 
-Needs a Google API key in apikey.txt, get one from [GCP](https://console.cloud.google.com/google/maps-apis/credentials)
+Needs
 
+- Google API key in apikey.txt, get one from [GCP](https://console.cloud.google.com/google/maps-apis/credentials)
+- Yelp key in yelpkey.txt get one from [Yelp](https://www.yelp.com/developers/documentation/v3)
+- Foursquare ID and secret in foursquare_id.txt, foursquare_secret.txt, get them from [Foursquare](https://developer.foursquare.com/docs/places-api/getting-started/)
+
+For Google maps in Jupyter add the gmaps extension
 - conda install jupyter_contrib_nbextensions
 - conda install -c conda-forge gmaps
 - jupyter nbextension enable --py gmaps
+
+See requirements.txt for additional requirements
 
 | Name	| Address | GMaps rating | Yelp rating | Foursquare rating | nratings | bayes_score |
 | ----	| ------- | ------------ | ----------- | ----------------- | -------- | ----------- |
@@ -25,8 +32,6 @@ Needs a Google API key in apikey.txt, get one from [GCP](https://console.cloud.g
 | Patsy’s Pizzeria | 450 Dean St | 4.5 |  |  | 1 | 0.350441 |
 | La Villa Pizzeria | 261 5th Ave | 4.5 |  |  | 1 | 0.350441 |
 | The House of Pizza & Calzone | 132 Union St | 4.6 | 4.0 | 7.3 | 3 | 0.329868 |
-| Lombardi's Coal Oven Pizza | 32 Spring St |  |  | 8.1 | 1 | 0.324191 |
-| Harry's Italian Pizza Bar | 2 Gold St |  |  | 8.0 | 1 | 0.273851 |
 | Pizza Town | 85 5th Ave | 4.5 |  | 7.5 | 2 | 0.264953 |
 | Lean Crust Pizza | 737 Fulton St | 4.4 |  |  | 1 | 0.201854 |
 | Fascati Pizza | 80 Henry St |  | 4.0 | 7.6 | 2 | 0.177691 |
