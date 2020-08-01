@@ -1,22 +1,29 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
-MAINTAINER Druce Vertes "drucev@hotmail.com"
+MAINTAINER Druce Vertes "drucev@gmail.com"
 
 RUN apt-get update -y && \
-    apt-get install -y python-pip python-dev
+    apt-get install -y python3-pip python3-dev
 
-RUN pip install --upgrade pip
+RUN pip3 install --upgrade pip
 
-# We copy just the requirements.txt first to leverage Docker cache
+# Copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt
 
 WORKDIR /app
 
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 COPY . /app
+RUN ls -la /app/*
 
-ENTRYPOINT [ "python" ]
+COPY apikeys /app/apikeys
+
+EXPOSE 80
+
+ENTRYPOINT [ "python3" ]
 
 CMD [ "app.py" ]
+
+
 
