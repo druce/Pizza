@@ -110,16 +110,18 @@ def gmaps_get_df(location, keyword):
 
     # use either rankby or radius
     gmaps_df = gmaps_get_all_df(api_key, location, keyword=keyword, ltype=ltype, rankby=rankby)
-    # gmaps_get_df(api_key, location, keyword=keyword, ltype=ltype, radius=RADIUS)
-    gmaps_df = gmaps_df.loc[(gmaps_df['user_ratings_total'] >= MIN_USER_RATINGS) & (gmaps_df['rating'] >= MIN_RATING)] \
-                       .sort_values(['rating', 'user_ratings_total'], ascending=False) \
-                       .reset_index(drop=True)
-    gmaps_df = gmaps_df[['name', 'vicinity', 'rating', 'user_ratings_total', 'geometry.location.lat', 'geometry.location.lng']]
-    gmaps_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng']
-    # drop trailing ", Brooklyn"
-    gmaps_df['address'] = gmaps_df['address'].apply(lambda address: " ".join(address.split(',')[:-1]))
-
-    return gmaps_df
+    if len(gmaps_df) and len(gmaps_df.columns):
+        # gmaps_get_df(api_key, location, keyword=keyword, ltype=ltype, radius=RADIUS)
+        gmaps_df = gmaps_df.loc[(gmaps_df['user_ratings_total'] >= MIN_USER_RATINGS) & (gmaps_df['rating'] >= MIN_RATING)] \
+                           .sort_values(['rating', 'user_ratings_total'], ascending=False) \
+                           .reset_index(drop=True)
+        gmaps_df = gmaps_df[['name', 'vicinity', 'rating', 'user_ratings_total', 'geometry.location.lat', 'geometry.location.lng']]
+        gmaps_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng']
+        # drop trailing ", Brooklyn"
+        gmaps_df['address'] = gmaps_df['address'].apply(lambda address: " ".join(address.split(',')[:-1]))
+        return gmaps_df
+    else:
+        return None
 
 
 def yelp_get_df(location, keyword):
@@ -128,13 +130,16 @@ def yelp_get_df(location, keyword):
                                      radius=RADIUS, sort_by=rankby, limit=NRESULTS)
 
     yelp_df = pd.json_normalize(response['businesses'])
-    yelp_df = yelp_df.loc[(yelp_df['review_count'] >= MIN_USER_RATINGS) & (yelp_df['rating'] >= MIN_RATING)] \
-                     .sort_values(['rating', 'review_count'], ascending=False) \
-                     .reset_index(drop=True)
-    display_columns = ['name', 'location.address1', 'rating', 'review_count', 'coordinates.latitude', 'coordinates.longitude', 'url']
-    yelp_df = yelp_df[display_columns]
-    yelp_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng', 'url']
-    return yelp_df
+    if len(yelp_df) and len(yelp_df.columns):    
+        yelp_df = yelp_df.loc[(yelp_df['review_count'] >= MIN_USER_RATINGS) & (yelp_df['rating'] >= MIN_RATING)] \
+                         .sort_values(['rating', 'review_count'], ascending=False) \
+                         .reset_index(drop=True)
+        display_columns = ['name', 'location.address1', 'rating', 'review_count', 'coordinates.latitude', 'coordinates.longitude', 'url']
+        yelp_df = yelp_df[display_columns]
+        yelp_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng', 'url']
+        return yelp_df
+    else:
+        return None
 
 
 def foursquare_get_df(location, keyword):
@@ -169,17 +174,19 @@ def foursquare_get_df(location, keyword):
             continue
 
     foursquare_df = pd.DataFrame(foursquare_array)
-    foursquare_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng', 'url']
-  
-    return foursquare_df
+    if len(foursquare_df) and len(foursquare_df.columns):
+        foursquare_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng', 'url']
+        return foursquare_df
+    else:
+        return None
 
 
-def dedupe(gmaps_df, yelp_df, foursquare_df):
-    gmaps_df['source'] = 0
-    yelp_df['source'] = 1
-    foursquare_df['source'] = 2
+def dedupe(dedupe_list):
 
-    venues_df = pd.concat([gmaps_df, yelp_df, foursquare_df]).reset_index()
+    for i, source_df in enumerate(dedupe_list):
+        source_df['source'] = i
+
+    venues_df = pd.concat(dedupe_list).reset_index()
     venues_df['latlong'] = venues_df[['lat','lng']].apply(tuple, axis=1)
     venues_df['shortname'] = venues_df['name'].apply(lambda n: n[:25])
     venues_df2 = pandas_dedupe.dedupe_dataframe(venues_df, ['shortname', 'address', ('latlong', 'LatLong')])
@@ -269,7 +276,10 @@ def home():
     gmaps_df = gmaps_get_df(location, keyword)
     yelp_df = yelp_get_df(location, keyword)
     foursquare_df = foursquare_get_df(location, keyword)
-    return dedupe(gmaps_df, yelp_df, foursquare_df).to_json()
+    dedupe_list = filter(lambda df: df is not None, [gmaps_df, yelp_df, foursquare_df])
+    print(len(gmaps_df), len(yelp_df), len(foursquare_df))
+    print("Deduping %d dataframes" % (len(list(dedupe_list))))
+    return dedupe(dedupe_list).to_json()
 
 
 @app.route("/query")
@@ -285,9 +295,11 @@ def query():
         gmaps_df = gmaps_get_df(location, keyword)
         yelp_df = yelp_get_df(location, keyword)
         foursquare_df = foursquare_get_df(location, keyword)
-        
-        return foursquare_get_json(location, keyword)
-
+        print(len(gmaps_df), len(yelp_df), len(foursquare_df))
+        pdb.set_trace()
+        dedupe_list = filter(lambda df: df is not None, [gmaps_df, yelp_df, foursquare_df])
+        print("Deduping %d dataframes" % (len(list(dedupe_list))))
+        return dedupe(dedupe_list).to_json()
     else:
         return "No query string received", 200
 
