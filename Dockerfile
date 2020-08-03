@@ -15,7 +15,6 @@ WORKDIR /app
 RUN pip3 install -r requirements.txt
 
 COPY . /app
-RUN ls -la /app/*
 
 COPY apikeys /app/apikeys
 

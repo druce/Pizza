@@ -1,4 +1,6 @@
 from pizza import *
+from flask_jsonpify import jsonpify
+from flask_cors import CORS, cross_origin
 
 # run pizza.ipynb in a flask server
 # http://localhost:8501/query?location=40.6875627,-74.0035107&keyword=coffee&ltype=establishment&rankby=distance
@@ -41,7 +43,11 @@ print("starting web server on port %d" % PORT)
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 @app.route('/', methods=['GET'])
+@cross_origin()
 def home():
     location = '40.6915812,-73.9954095'
     keyword = 'pizza'
@@ -50,11 +56,13 @@ def home():
 
     gmaps_df = gmaps_get_df(location, keyword)
     yelp_df = yelp_get_df(location, keyword)
-    foursquare_df = foursquare_get_df(location, keyword)
-    dedupe_list = list(filter(lambda df: df is not None, [gmaps_df, yelp_df, foursquare_df]))
-    print(len(gmaps_df), len(yelp_df), len(foursquare_df))
-    print("Deduping %d dataframes" % (len(list(dedupe_list))))
-    return dedupe(dedupe_list).to_json()
+    # foursquare_df = foursquare_get_df(location, keyword)
+    # dedupe_list = list(filter(lambda df: df is not None, [gmaps_df, yelp_df, foursquare_df]))
+    dedupe_list = list(filter(lambda df: df is not None, [gmaps_df, yelp_df]))
+    dedupe_df = dedupe(dedupe_list)
+    df_list = dedupe_df.values.tolist()
+    JSONP_data = jsonpify(df_list)
+    return JSONP_data
 
 
 @app.route("/query")
@@ -71,9 +79,10 @@ def query():
         yelp_df = yelp_get_df(location, keyword)
         foursquare_df = foursquare_get_df(location, keyword)
         dedupe_list = list(filter(lambda df: df is not None, [gmaps_df, yelp_df, foursquare_df]))
-        print(len(gmaps_df), len(yelp_df), len(foursquare_df))
-        print("Deduping %d dataframes" % (len(list(dedupe_list))))
-        return dedupe(dedupe_list).to_json()
+        dedupe_df = dedupe(dedupe_list)
+        df_list = dedupe_df.values.tolist()
+        JSONP_data = jsonpify(df_list)
+        return JSONP_data
     else:
         return "No query string received", 200
 

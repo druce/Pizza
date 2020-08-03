@@ -30,7 +30,8 @@ $(document).ready(function(){
         $("#header").css("background-image", "url('images/coffee.jpg')");
     })
 
-    $.getJSON('http://localhost', function(data) {
-    // JSON result in `data` variable
-});
-    })
+    $.getJSON('http://54.224.21.240:8181?', function(data) {
+	window.mydata = data;
+    });
+    
+})
