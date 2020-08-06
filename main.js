@@ -30,8 +30,19 @@ $(document).ready(function(){
         $("#header").css("background-image", "url('images/coffee.jpg')");
     })
 
-    $.getJSON('http://54.224.21.240:8181?', function(data) {
-	window.mydata = data;
+    $.ajax({
+	dataType: 'json',
+	url: 'http://localhost:8181',
+	success: function(data) {
+	    outstr = "";
+	    for ( var i=0, len=data.length; i<len; i++ ) {
+		outstr += (i+1 + "," + data[i].name + "," + data[i].address + "," + data[i].gmaps_rating + "," + data[i].yelp_rating + "," + data[i].foursquare_rating);
+	    }
+	    $("#results").html(outstr);
+	},
+	error: function(data) {
+	    console.log('error');
+	    console.log(data);
+	}
     });
-    
 })

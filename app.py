@@ -1,4 +1,5 @@
 from pizza import *
+from flask import Response
 from flask_jsonpify import jsonpify
 from flask_cors import CORS, cross_origin
 
@@ -54,15 +55,16 @@ def home():
     ltype = 'establishment'
     rankby = 'distance'
 
-    gmaps_df = gmaps_get_df(location, keyword)
-    yelp_df = yelp_get_df(location, keyword)
+    # gmaps_df = gmaps_get_df(location, keyword)
+    # yelp_df = yelp_get_df(location, keyword)
     # foursquare_df = foursquare_get_df(location, keyword)
     # dedupe_list = list(filter(lambda df: df is not None, [gmaps_df, yelp_df, foursquare_df]))
-    dedupe_list = list(filter(lambda df: df is not None, [gmaps_df, yelp_df]))
-    dedupe_df = dedupe(dedupe_list)
-    df_list = dedupe_df.values.tolist()
-    JSONP_data = jsonpify(df_list)
-    return JSONP_data
+    # dedupe_df = dedupe(dedupe_list)
+    # dedupe_df.to_pickle("results.pkl")
+
+    # for debug, don't use API calls
+    dedupe_df = pd.read_pickle("results.pkl")
+    return Response(dedupe_df.to_json(orient="records"), mimetype='application/json')
 
 
 @app.route("/query")
@@ -75,14 +77,18 @@ def query():
         ltype = args['ltype']
         rankby = args['rankby']
 
-        gmaps_df = gmaps_get_df(location, keyword)
-        yelp_df = yelp_get_df(location, keyword)
-        foursquare_df = foursquare_get_df(location, keyword)
-        dedupe_list = list(filter(lambda df: df is not None, [gmaps_df, yelp_df, foursquare_df]))
-        dedupe_df = dedupe(dedupe_list)
+        # gmaps_df = gmaps_get_df(location, keyword)
+        # yelp_df = yelp_get_df(location, keyword)
+        # foursquare_df = foursquare_get_df(location, keyword)
+        # dedupe_list = list(filter(lambda df: df is not None, [gmaps_df, yelp_df, foursquare_df]))
+        # dedupe_df = dedupe(dedupe_list)
+        # dedupe_df.to_pickle("results.pkl")
+
+        # for debug, don't use API calls
+        dedupe_df = pd.read_pickle("results.pkl")
         df_list = dedupe_df.values.tolist()
         JSONP_data = jsonpify(df_list)
-        return JSONP_data
+        return Response(JSONP_data, mimetype='application/json')
     else:
         return "No query string received", 200
 
