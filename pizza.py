@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 import pandas_dedupe
 
+from geopy.distance import distance
+
 from sklearn.preprocessing import StandardScaler
 
 import requests, json 
@@ -43,7 +45,7 @@ import folium
 MIN_USER_RATINGS = 40
 MIN_RATING = 3
 NRESULTS = 50
-RADIUS = 3000
+RADIUS = 1000
 
 #######################################################
 
@@ -55,10 +57,11 @@ ltype='establishment'
 
 def gmaps_get_first_page(api_key, location, **kwargs):
     """get first page of results from gmaps using api_key, location, kwargs for search spec"""
+    # use either rankby or radius kwarg
     request_url = GMAPS_URL + '?key=' + api_key
     request_url += '&location=' + location
     for name, val in kwargs.items():
-        request_url += '&' + name + '=' + val
+        request_url += '&' + name + '=' + str(val)
     r = requests.get(request_url)
     j = r.json()
     return j
@@ -93,10 +96,11 @@ def gmaps_get_all_df(api_key, location, **kwargs):
     return venues_df
 
 
-def gmaps_get_df(location, keyword):
+def gmaps_get_df(location_coords, keyword):
 
     # use either rankby or radius
-    gmaps_df = gmaps_get_all_df(api_key, location, keyword=keyword, ltype=ltype, rankby=rankby)
+    location_str = "%.7f,%.7f" % location_coords
+    gmaps_df = gmaps_get_all_df(api_key, location_str, keyword=keyword, ltype=ltype, radius=RADIUS)
     if gmaps_df.empty:
         return None
     else:
@@ -108,11 +112,13 @@ def gmaps_get_df(location, keyword):
         gmaps_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng']
         # drop trailing ", Brooklyn"
         gmaps_df['address'] = gmaps_df['address'].apply(lambda address: " ".join(address.split(',')[:-1]))
+        gmaps_df['distance'] = gmaps_df.apply(lambda row: distance((row['lat'], row['lng']), location_coords).km,
+                                              axis=1)
         return gmaps_df
 
 
-def yelp_get_df(location, keyword):
-    lat, lng = eval(location)
+def yelp_get_df(location_coords, keyword):
+    lat, lng = location_coords
     response = yelp_api.search_query(categories=keyword, latitude=lat, longitude=lng, 
                                      radius=RADIUS, sort_by=rankby, limit=NRESULTS)
 
@@ -124,17 +130,20 @@ def yelp_get_df(location, keyword):
         display_columns = ['name', 'location.address1', 'rating', 'review_count', 'coordinates.latitude', 'coordinates.longitude', 'url']
         yelp_df = yelp_df[display_columns]
         yelp_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng', 'url']
+        yelp_df['distance'] = yelp_df.apply(lambda row: distance((row['lat'], row['lng']), location_coords).km,
+                                              axis=1)
+        
         return yelp_df
     else:
         return None
 
 
-def foursquare_get_df(location, keyword):
-
+def foursquare_get_df(location_coords, keyword):
+    location_str = "%.7f,%.7f" % location_coords
     client = Foursquare(client_id=foursquare_id, 
                                    client_secret=foursquare_secret, 
                                    redirect_uri='http://streeteye.com/')
-    response = client.venues.search(params={'query': keyword, 'll': "%s" % location, 
+    response = client.venues.search(params={'query': keyword, 'll': "%s" % location_str, 
                                             'radius': RADIUS, 'limit': NRESULTS})
 
     foursquare_array = []
@@ -144,7 +153,12 @@ def foursquare_get_df(location, keyword):
         # query detailed venue info from foursquare
         venue_name = venue['name']
         venue_address = venue['location.address']
-        venue_url = venue['delivery.url']
+        # sometimes no URL
+        try:
+            venue_url = venue['delivery.url']
+        except:
+            venue_url = ''
+            
         venue_lat = venue['location.lat']
         venue_lng = venue['location.lng']
         # default these to -1
@@ -160,6 +174,7 @@ def foursquare_get_df(location, keyword):
         except Exception as e:
             pass
             # sometimes no rating ... probably not popular enough
+            # sometimes no rating ... probably not popular enough
             # print(type(e), str(e))
             # print(traceback.format_exc())
             # print("No rating for %s" % venue_name)
@@ -167,8 +182,15 @@ def foursquare_get_df(location, keyword):
         foursquare_array.append([venue_name, venue_address, venue_rating, venue_nratings, venue_lat, venue_lng, venue_url])
             
     foursquare_df = pd.DataFrame(foursquare_array)
+    
     if len(foursquare_df) and len(foursquare_df.columns):
         foursquare_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng', 'url']
+        foursquare_df = foursquare_df.loc[(foursquare_df['nratings'] >= MIN_USER_RATINGS) & (foursquare_df['rating'] >= MIN_RATING)] \
+                                     .sort_values(['rating', 'nratings'], ascending=False) \
+                                     .reset_index(drop=True)
+        
+        foursquare_df['distance'] = foursquare_df.apply(lambda row: distance((row['lat'], row['lng']), location_coords).km,
+                                                        axis=1)
         return foursquare_df
     else:
         return None
@@ -184,10 +206,10 @@ def dedupe(dedupe_list):
     # dedupe and assign cluster id
     venues_df2 = pandas_dedupe.dedupe_dataframe(venues_df, ['shortname', 'address', ('latlong', 'LatLong')])
     venues_df['cluster'] = venues_df2['cluster id']
-    venues_df = venues_df.sort_values(['cluster', 'source'])[['cluster', 'name', 'address', 'rating', 'nratings', 'lat', 'lng', 'source']]
+    venues_df = venues_df.sort_values(['cluster', 'source'])[['cluster', 'name', 'address', 'rating', 'nratings', 'lat', 'lng', 'distance', 'source']]
 
     # group by clusters, uniquify name
-    cluster_df = venues_df.groupby('cluster')[['name', 'address', 'lat', 'lng', 'source']] \
+    cluster_df = venues_df.groupby('cluster')[['name', 'address', 'lat', 'lng', 'distance', 'source']] \
                           .first() \
                           .reset_index()
 

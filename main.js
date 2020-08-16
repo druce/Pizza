@@ -1,5 +1,6 @@
 $(document).ready(function(){
-    $('.header').height($(window).height());
+    $('.overlay').height($(window).height());
+
 
     locations = {
         "midtown": {'pretty_name': 'Midtown', coords: '40.7484, -73.9857'},
@@ -8,7 +9,7 @@ $(document).ready(function(){
         "upperwestside": {'pretty_name': 'Upper West Side', coords: '40.778794,-73.984257'},
         "brooklynheights": {'pretty_name': 'Brooklyn Heights', coords: '40.6915812,-73.9954095'},
         "grandarmyplaza": {'pretty_name': 'Grand Army Plaza', coords: '40.671872,-73.972544'},
-        "bayridge": {'pretty_name': 'Bay Ridge', coords: '40.624468,-74.0487134'},
+        "bayridge": {'pretty_name': 'Bay Ridge', coords: '40.6292633,-74.0309554'},
         "williamsburg": {'pretty_name': 'Williamsburg', coords: '40.7144609,-73.9553373'},
     }
     
@@ -22,13 +23,20 @@ $(document).ready(function(){
 
     $("#pizza_action").button().click(function(){
         $("#keyword_button").text($(this).text());
-        $("#header").css("background-image", "url('images/pizza.jpg')");
+        $("#page_title").text("Pizza Pizza Pizza");
+        $("body").css("background-image", "url('images/pizza.jpg')");
     })
 
     $("#coffee_action").button().click(function(){
         $("#keyword_button").text($(this).text())
-        $("#header").css("background-image", "url('images/coffee.jpg')");
+        $("#page_title").text("Coffee Coffee Coffee");
+        $("body").css("background-image", "url('images/coffee.jpg')");
     })
+
+    $('#output_table').DataTable({
+        "searching":   false,
+        "lengthChange":   false
+    });
 
     $.ajax({
 	dataType: 'json',

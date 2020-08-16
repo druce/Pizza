@@ -1,97 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Pizza Pizza Pizza</title>
+<!-- 
+    send correct js from flask and implement table
+    insert map with leaflet.js 
+-->
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="main.css">
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-md">
-      <a class="navbar-brand" href="#">Logo</a>
-      <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
-	<span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="main-navigation">
-	<ul class="navbar-nav">
-	  <li class="nav-item">
-	    <a class="nav-link" href="#">Home</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" href="#">About</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" href="#">Contact</a>
-	  </li>
-	</ul>
-      </div>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+        integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css"
+        integrity="sha512-f8mUMCRNrJxPBDzPJx3n+Y5TC5xp6SmStstEfgsDXZJTcxBakoB5hvPLhAfJKa9rCvH+n3xpJ2vQByxLk4WP2g=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">        
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">    
+    <title>Pizza Pizza Pizza</title>
+</head>
+
+<body>
+    <div class="overlay"></div>
+
+    <nav class="navbar navbar-expand-sm navbar-static-top" role="navigation">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
+                <span class="navbar-toggler-icon"><i class="fas fa-bars" style="color: white;"></i></span>
+            </button>
+
+            <a class="navbar-brand" href="#">StreetEYE</a>
+
+            <div class="collapse navbar-collapse" id="Navbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-rss-square"></i> Blog
+                        </a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-tools"></i> Projects
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                          </div>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-address-card fa-lg"></i> About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <header id="header" class="page-header header container-fluid">
-      <div class="overlay"></div>
-      <div class="description">
-	<h1>Pizza Pizza Pizza</h1>
-	<p>Search multiple crowdsourced review platforms for pizza (or coffee) in your local area.</p>
-
-	<div class="dropdown">
-	  <span class="text-white">Search keyword </span>
-	  <button id="keyword_button" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownKeyword" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	    Pizza
-	  </button>
-	  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-	    <a id="pizza_action" class="dropdown-item" href="#">Pizza</a>
-	    <a id="coffee_action" class="dropdown-item" href="#">Coffee</a>
-	  </div>
-	</div>
-
-	<div class="row">
-	  &nbsp;
-	</div>
-	
-	<div class="dropdown">
-	  <span class="text-white">Location </span>
-	  <button id="location_button" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownLocation" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	    Midtown
-	  </button>
-	  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-	    <a id="midtown" class="dropdown-item" href="#">Midtown</a>
-	    <a id="downtown" class="dropdown-item" href="#">Downtown</a>
-	    <a id="uppereastside" class="dropdown-item" href="#">Upper East Side</a>
-	    <a id="upperwestside" class="dropdown-item" href="#">Upper West Side</a>
-	    <a id="brooklynheights" class="dropdown-item" href="#">Brooklyn Heights</a>
-	    <a id="grandarmyplaza" class="dropdown-item" href="#">Grand Army Plaza</a>
-	    <a id="bayridge" class="dropdown-item" href="#">Bay Ridge</a>
-	    <a id="williamsburg" class="dropdown-item" href="#">Williamsburg</a>
-	  </div>
-	</div>
+    <header class="jumbotron ">
+        <div class="container">
+            <div class="row row-header">
+                <div class="col-12">
+                    <h1 id="page_title">Pizza Pizza Pizza</h1>
+                    <p>Search for pizza (or coffee) in your local area using multiple crowdsourced review platforms (Google, Yelp, Foursquare)</p>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <div id="results">
-      
+    <div class="container h-100" id="content">
+        <div class="row row-content h-100 justify-content-center align-items-center">
+            <form class="col-12 col-sm-2">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="sr-only" for="keyword_button">Keyword</label>
+                        <button id="keyword_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Pizza
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a id="pizza_action" class="dropdown-item" href="#">Pizza</a>
+                            <a id="coffee_action" class="dropdown-item" href="#">Coffee</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="sr-only" for="location_button">Keyword</label>
+                        <button id="location_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Location
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a id="midtown" class="dropdown-item" href="#">Midtown</a>
+                            <a id="downtown" class="dropdown-item" href="#">Downtown</a>
+                            <a id="uppereastside" class="dropdown-item" href="#">Upper East Side</a>
+                            <a id="upperwestside" class="dropdown-item" href="#">Upper West Side</a>
+                            <a id="brooklynheights" class="dropdown-item" href="#">Brooklyn Heights</a>
+                            <a id="grandarmyplaza" class="dropdown-item" href="#">Grand Army Plaza</a>
+                            <a id="bayridge" class="dropdown-item" href="#">Bay Ridge</a>
+                            <a id="williamsburg" class="dropdown-item" href="#">Williamsburg</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row row-content" id="output">
+            <div class="col-12">
+                <table id="output_table" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                  <tr style="text-align: right;">
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Distance</th>
+                    <th>GMaps</th>
+                    <th>Yelp</th>
+                    <th>Foursquare</th>
+                  </tr>
+                    </thead>
+                    <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Blue Bottle Coffee</td>
+                    <td>85 Dean St</td>
+                    <td>0.6704404577509734</td>
+                    <td>4.6</td>
+                    <td>4.5</td>
+                    <td>9.0</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Kaigo Coffee Room</td>
+                    <td>139 Bridge Park Dr</td>
+                    <td>0.5174652892307422</td>
+                    <td>4.7</td>
+                    <td>4.5</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Stumptown Coffee Roasters</td>
+                    <td>212 Pacific St</td>
+                    <td>0.40279860110530014</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                    <td>9.2</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>WHITE NOISE COFFEE CO.</td>
+                    <td>57 Smith St</td>
+                    <td>0.6423864481559638</td>
+                    <td>4.5</td>
+                    <td>4.5</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>East One Coffee Roasters</td>
+                    <td>384 Court St</td>
+                    <td>1.1587170515293623</td>
+                    <td>4.5</td>
+                    <td>4.0</td>
+                    <td>9.1</td>
+                  </tr>
+                  <tr>
+                    <td>6</td>
+                    <td>Stumptown Coffee Roasters</td>
+                    <td>212b Pacific St</td>
+                    <td>0.4100084273883361</td>
+                    <td>4.7</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>7</td>
+                    <td>About coffee</td>
+                    <td>187 State St</td>
+                    <td>0.34698153281763605</td>
+                    <td>4.7</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>8</td>
+                    <td>The Little Sweet Cafe</td>
+                    <td>77B Hoyt St</td>
+                    <td>0.8269470197713087</td>
+                    <td>NaN</td>
+                    <td>4.5</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>9</td>
+                    <td>Blossom Ice Cream</td>
+                    <td>196 Court St</td>
+                    <td>0.49297150745442603</td>
+                    <td>NaN</td>
+                    <td>4.5</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>10</td>
+                    <td>Vineapple Cafe</td>
+                    <td>71 Pineapple St</td>
+                    <td>0.7805256627694568</td>
+                    <td>4.6</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>11</td>
+                    <td>D\'Amico Coffee</td>
+                    <td>309 Court St</td>
+                    <td>0.8999720584608276</td>
+                    <td>4.7</td>
+                    <td>NaN</td>
+                    <td>7.6</td>
+                  </tr>
+                  <tr>
+                    <td>12</td>
+                    <td>The Little Sweet Café</td>
+                    <td>77 Hoyt St</td>
+                    <td>0.8387688514432935</td>
+                    <td>4.5</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>13</td>
+                    <td>Absolute Coffee</td>
+                    <td>327 Atlantic Ave</td>
+                    <td>0.7570547723815837</td>
+                    <td>4.4</td>
+                    <td>4.5</td>
+                    <td>7.2</td>
+                  </tr>
+                  <tr>
+                    <td>14</td>
+                    <td>White Noise Coffee Co.</td>
+                    <td>71 Smith St</td>
+                    <td>0.6426935410462576</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                    <td>8.2</td>
+                  </tr>
+                  <tr>
+                    <td>15</td>
+                    <td>Gregorys Coffee</td>
+                    <td>16 Court St</td>
+                    <td>0.4463367585854722</td>
+                    <td>4.4</td>
+                    <td>4.0</td>
+                    <td>7.7</td>
+                  </tr>
+                  <tr>
+                    <td>16</td>
+                    <td>Joe Coffee Company</td>
+                    <td>102 Hicks St</td>
+                    <td>0.7925744097996287</td>
+                    <td>4.4</td>
+                    <td>3.5</td>
+                    <td>8.7</td>
+                  </tr>
+                  <tr>
+                    <td>17</td>
+                    <td>Bridge Front</td>
+                    <td>73 Bridge St</td>
+                    <td>1.5017380803660596</td>
+                    <td>4.4</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>18</td>
+                    <td>Devoción</td>
+                    <td>276 Livingston St</td>
+                    <td>1.0645168064375583</td>
+                    <td>4.4</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>19</td>
+                    <td>Bluestone Lane DUMBO Café</td>
+                    <td>55 Prospect St</td>
+                    <td>1.188478693418052</td>
+                    <td>4.3</td>
+                    <td>4.0</td>
+                    <td>8.0</td>
+                  </tr>
+                  <tr>
+                    <td>20</td>
+                    <td>Van Leeuwen Ice Cream</td>
+                    <td>81 Bergen St</td>
+                    <td>0.7070031933282545</td>
+                    <td>NaN</td>
+                    <td>4.0</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>21</td>
+                    <td>Hanco\'s</td>
+                    <td>134 Smith St</td>
+                    <td>0.6576038157445738</td>
+                    <td>NaN</td>
+                    <td>4.0</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>22</td>
+                    <td>Brooklyn Farmacy &amp; Soda Fountain</td>
+                    <td>513 Henry St</td>
+                    <td>0.9037682135203426</td>
+                    <td>NaN</td>
+                    <td>4.0</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>23</td>
+                    <td>Tutt Cafe</td>
+                    <td>47 Hicks St</td>
+                    <td>0.9735190752555182</td>
+                    <td>NaN</td>
+                    <td>4.0</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>24</td>
+                    <td>Paris Baguette</td>
+                    <td>97 Court St</td>
+                    <td>0.3275763775426302</td>
+                    <td>NaN</td>
+                    <td>4.0</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>25</td>
+                    <td>Casella Bagel Coffee Shop</td>
+                    <td>66 Willoughby St</td>
+                    <td>0.7941716765264802</td>
+                    <td>4.3</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>26</td>
+                    <td>Cobble Hill Coffeeshop</td>
+                    <td>314 Court St</td>
+                    <td>0.9026627770005413</td>
+                    <td>4.2</td>
+                    <td>NaN</td>
+                    <td>8.0</td>
+                  </tr>
+                  <tr>
+                    <td>27</td>
+                    <td>Konditori</td>
+                    <td>114 Smith St</td>
+                    <td>0.6282670700068262</td>
+                    <td>4.2</td>
+                    <td>3.5</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>28</td>
+                    <td>Maison Kayser</td>
+                    <td>57 Court St</td>
+                    <td>0.36350645407614796</td>
+                    <td>NaN</td>
+                    <td>3.5</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>29</td>
+                    <td>Swallow Cafe</td>
+                    <td>156 Atlantic Ave</td>
+                    <td>0.1722110826345789</td>
+                    <td>NaN</td>
+                    <td>3.5</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>30</td>
+                    <td>Panera Bread</td>
+                    <td>345 Adams St</td>
+                    <td>0.5968599109663714</td>
+                    <td>4.0</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>31</td>
+                    <td>Starbucks</td>
+                    <td>67 Front St</td>
+                    <td>1.2909818897871435</td>
+                    <td>4.0</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>32</td>
+                    <td>Starbucks</td>
+                    <td>309 Gold St</td>
+                    <td>1.1273086203193552</td>
+                    <td>3.9</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>33</td>
+                    <td>Starbucks</td>
+                    <td>164 Smith St</td>
+                    <td>0.7043813171646282</td>
+                    <td>4.1</td>
+                    <td>3.5</td>
+                    <td>6.4</td>
+                  </tr>
+                  <tr>
+                    <td>34</td>
+                    <td>Dunkin\'</td>
+                    <td>56 Court St</td>
+                    <td>0.3503597406110326</td>
+                    <td>3.8</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>35</td>
+                    <td>Starbucks</td>
+                    <td>50 Court St</td>
+                    <td>0.36898704918973496</td>
+                    <td>3.9</td>
+                    <td>NaN</td>
+                    <td>6.6</td>
+                  </tr>
+                  <tr>
+                    <td>36</td>
+                    <td>Carroll Gardens Classic Diner</td>
+                    <td>155 Smith St</td>
+                    <td>0.7164690639242055</td>
+                    <td>NaN</td>
+                    <td>3.0</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>37</td>
+                    <td>Starbucks</td>
+                    <td>348 Fulton St</td>
+                    <td>0.5804609838061188</td>
+                    <td>4.0</td>
+                    <td>3.0</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>38</td>
+                    <td>Starbucks</td>
+                    <td>134 Montague St</td>
+                    <td>0.354519716713737</td>
+                    <td>4.1</td>
+                    <td>3.0</td>
+                    <td>6.5</td>
+                  </tr>
+                  <tr>
+                    <td>39</td>
+                    <td>Dunkin\'</td>
+                    <td>387 Jay St</td>
+                    <td>0.706159943084636</td>
+                    <td>3.6</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <td>40</td>
+                    <td>Starbucks</td>
+                    <td>167 Court St</td>
+                    <td>0.4043133527697902</td>
+                    <td>4.0</td>
+                    <td>3.0</td>
+                    <td>6.4</td>
+                  </tr>
+                  <tr>
+                    <td>41</td>
+                    <td>Starbucks</td>
+                    <td>6 MetroTech Center</td>
+                    <td>0.7788711428601046</td>
+                    <td>3.5</td>
+                    <td>NaN</td>
+                    <td>6.0</td>
+                  </tr>
+                    </tbody>
+                  </table>                
+            </div>
+        </div>
     </div>
-     
-    
-    <footer class="page-footer">
-      <div class="container">
-	<div class="row">
-	  <div class="col-lg-8 col-md-8 col-sm-12">
-	    <h6 class="text-uppercase font-weight-bold">Additional Information</h6>
-	    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet dolor id sapien rutrum, id vulputate quam iaculis.</p>
-	  </div>
-	  <div class="col-lg-4 col-md-4 col-sm-12">
-	    <h6 class="text-uppercase font-weight-bold">Contact</h6>
-	    <br/>drucev@gmail.com
-</p>
-</div>
-</div>
-</div>
-<div class="footer-copyright text-center">© 2020 Copyright: StreetEYE.com</div>
-</footer>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-<script src="main.js"></script>
+
+    <footer class="footer">
+        <div class="container">
+          <div class="row justify-content-center align-items-center">
+            <div class="col-auto">
+                <i class="fab fa-github fa-lg github_color"> </i> <a href="#" class="footer_link"> GitHub</a>
+                <i class="fab fa-google fa-lg gmaps_color"> </i> <a href="#" class="footer_link">Google Maps</a>
+                <i class="fab fa-yelp fa-lg yelp_color"> </i> <a href="#" class="footer_link">Yelp</a>
+                <i class="fab fa-foursquare fa-lg foursquare_color"> </i> <a href="#" class="footer_link">Foursquare</a>
+            </div>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <div class="col-auto ">
+              <p>© Copyright 2020 Druce Vertes</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <script src="js/jquery.dataTables.min.js"></script>        
+    <script src="main.js"></script>
 </body>
+
 </html>
