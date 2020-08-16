@@ -1,10 +1,10 @@
 from pizza import *
 from flask import Response
-from flask_jsonpify import jsonpify
+from flask_jsonpify import jsonpify, jsonify
 from flask_cors import CORS, cross_origin
 
 # run pizza.ipynb in a flask server
-# http://localhost:8501/query?location=40.6875627,-74.0035107&keyword=coffee&ltype=establishment&rankby=distance
+# http://localhost:8501/query?location=brooklynheights&keyword=coffee
 
 # show form
 # show querying status / progress bar
@@ -52,8 +52,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def home():
     location = '40.6915812,-73.9954095'
     keyword = 'pizza'
-    ltype = 'establishment'
-    rankby = 'distance'
 
     # gmaps_df = gmaps_get_df(location, keyword)
     # yelp_df = yelp_get_df(location, keyword)
@@ -62,20 +60,27 @@ def home():
     # dedupe_df = dedupe(dedupe_list)
     # dedupe_df.to_pickle("results.pkl")
 
-    # for debug, don't use API calls
-    dedupe_df = pd.read_pickle("results.pkl")
-    return Response(dedupe_df.to_json(orient="records"), mimetype='application/json')
+    # for demo, don't use API calls
+    dedupe_df = pd.read_pickle("pizza_brooklynheights.pkl")
+    tablecols = ['name', 'address', 'distance', 'gmaps_rating', 'yelp_rating', 'foursquare_rating']
+    tmpdf = dedupe_df.sort_values('bayes_score', ascending=False).reset_index(drop=True)[tablecols]
+    tmpdf['rank'] = tmpdf.index + 1
+    tmpdf['distance'] = tmpdf['distance'].apply(lambda d: "%1.1f km" % (float(d)))
+    tmpdf['address'] = tmpdf['address'].apply(lambda a: a[:25])
+    tmpdf['name'] = tmpdf['name'].apply(lambda a: a[:25])
+    tmpdf = tmpdf[['rank'] + tablecols]
+    tmpdf.columns=['Rank', 'Name', 'Address', 'Distance', 'Google Maps', 'Yelp', 'Foursquare']
+    retval = tmpdf.to_json(orient="records")
+    return Response(retval, mimetype='application/json')
 
 
 @app.route("/query")
 def query():
-
+    # http://localhost:8501
     args = request.args
     if args:
         location = args['location']
         keyword = args['keyword']
-        ltype = args['ltype']
-        rankby = args['rankby']
 
         # gmaps_df = gmaps_get_df(location, keyword)
         # yelp_df = yelp_get_df(location, keyword)
@@ -84,11 +89,23 @@ def query():
         # dedupe_df = dedupe(dedupe_list)
         # dedupe_df.to_pickle("results.pkl")
 
-        # for debug, don't use API calls
-        dedupe_df = pd.read_pickle("results.pkl")
+        # for demo, don't use API calls
+        picklefile = "%s_%s.pkl" % (keyword, location)
+        dedupe_df = pd.read_pickle(picklefile)
+        tablecols = ['name', 'address', 'distance', 'gmaps_rating', 'yelp_rating', 'foursquare_rating']
+        tmpdf = dedupe_df.sort_values('bayes_score', ascending=False).reset_index(drop=True)[tablecols]
+        tmpdf['rank'] = tmpdf.index + 1
+        tmpdf['distance'] = tmpdf['distance'].apply(lambda d: "%1.1f km" % (float(d)))
+        tmpdf['address'] = tmpdf['address'].apply(lambda a: a[:25])
+        tmpdf['name'] = tmpdf['name'].apply(lambda a: a[:25])
+        tmpdf = tmpdf[['rank'] + tablecols]
+        tmpdf.columns=['Rank', 'Name', 'Address', 'Distance', 'Google Maps', 'Yelp', 'Foursquare']
+        retval = tmpdf.to_json(orient="records")
+        return Response(retval, mimetype='application/json')
+        
+        dedupe_df = pd.read_pickle("pizza_brooklynheights.pkl")
         df_list = dedupe_df.values.tolist()
-        JSONP_data = jsonpify(df_list)
-        return Response(JSONP_data, mimetype='application/json')
+        return Response(jsonify(df_list), mimetype='application/json')
     else:
         return "No query string received", 200
 
