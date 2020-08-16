@@ -34,11 +34,26 @@ $(document).ready(function(){
     })
 
     $('#output_table').DataTable({
-        "searching":   false,
-        "lengthChange":   false
+        "searching":  false,
+        "lengthChange":  false,
+	"paging": false,
+	"info": false,
+        "columns": [
+	    { "data": "Rank", "orderable": true },
+	    { "data": "Name", "orderable" : true },
+	    { "data": "Address", "orderable" : true },
+	    { "data": "Distance", "orderable" : true, "className": "text-right" },
+	    { "data": "Google Maps", "orderable" : true, "className": "text-right" },
+	    { "data": "Yelp", "orderable" : true, "className": "text-right" },
+	    { "data": "Foursquare", "orderable" : true, "className": "text-right" }
+	],
+	"ajax": {
+	    url: "http://3.87.162.105:8181/",
+	    dataSrc: ""
+	}
     });
-
-    $.ajax({
+})
+/*    $.ajax({
 	dataType: 'json',
 	url: 'http://localhost:8181',
 	success: function(data) {
@@ -54,3 +69,4 @@ $(document).ready(function(){
 	}
     });
 })
+*/

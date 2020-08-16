@@ -14,10 +14,9 @@
 }
 
 body {
-/*    background-image: url("../images/pizza.jpg"); */
+    background-image: url("../images/pizza.jpg");
     background-size: cover;
     background-position: center;
-    /* background-repeat: no-repeat; */
     position: relative;
 }
 
@@ -52,8 +51,20 @@ body {
 }
 
 #output_table {
+    font-size: 10pt;
     color: black;
-;
+    background: #edc;    
+}
+
+#output_table tr { 
+    overflow: hidden;
+    height: 14px;
+    white-space: nowrap;
+}
+
+#output_table td { 
+    text-overflow: ellipsis;
+    padding: 4px 4px 4px 4px;    
 }
 
 .footer {
