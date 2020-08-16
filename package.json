@@ -22,6 +22,7 @@
     },
     "homepage": "https://github.com/druce/Pizza#readme",
     "devDependencies": {
-	"lite-server": "^2.5.4"
+	"minimist": ">=1.2.3"
+	"lite-server": ">=2.5.4"
     }
 }
