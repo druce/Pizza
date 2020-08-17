@@ -78,37 +78,37 @@
                     <div class="form-group">
                         <label class="sr-only" for="keyword_button">Keyword</label>
                         <button id="keyword_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Pizza
+                          Keyword
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a id="pizza_action" class="dropdown-item" href="#">Pizza</a>
-                            <a id="coffee_action" class="dropdown-item" href="#">Coffee</a>
+                            <a id="pizza_action" class="dropdown-item" href="#" value="pizza">Pizza</a>
+                            <a id="coffee_action" class="dropdown-item" href="#" value="coffee">Coffee</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="sr-only" for="location_button">Keyword</label>
+                        <label class="sr-only" for="location_button">Location</label>
                         <button id="location_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Location
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a id="midtown" class="dropdown-item" href="#">Midtown</a>
-                            <a id="downtown" class="dropdown-item" href="#">Downtown</a>
-                            <a id="uppereastside" class="dropdown-item" href="#">Upper East Side</a>
-                            <a id="upperwestside" class="dropdown-item" href="#">Upper West Side</a>
-                            <a id="brooklynheights" class="dropdown-item" href="#">Brooklyn Heights</a>
-                            <a id="grandarmyplaza" class="dropdown-item" href="#">Grand Army Plaza</a>
-                            <a id="bayridge" class="dropdown-item" href="#">Bay Ridge</a>
-                            <a id="williamsburg" class="dropdown-item" href="#">Williamsburg</a>
+                            <a id="midtown" class="dropdown-item" href="#" value="midtown">Midtown</a>
+                            <a id="downtown" class="dropdown-item" href="#" value="downtown">Downtown</a>
+                            <a id="uppereastside" class="dropdown-item" href="#" value="uppereastside">Upper East Side</a>
+                            <a id="upperwestside" class="dropdown-item" href="#" value="upperwestside">Upper West Side</a>
+                            <a id="brooklynheights" class="dropdown-item" href="#" value="brooklynheights">Brooklyn Heights</a>
+                            <a id="grandarmyplaza" class="dropdown-item" href="#" value="grandarmyplaza">Grand Army Plaza</a>
+                            <a id="bayridge" class="dropdown-item" href="#" value="bayridge">Bay Ridge</a>
+                            <a id="williamsburg" class="dropdown-item" href="#" value="williamsburg">Williamsburg</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <button type="submit" class="btn btn-danger">Search</button>
+                        <button type="button" class="btn btn-danger" id="search_button">Search</button>
                     </div>
                 </div>
             </form>
@@ -123,9 +123,9 @@
                         <th>Name</th>
                         <th>Address</th>
                         <th>Distance</th>
-                        <th>GMaps</th>
-                        <th>Yelp</th>
-                        <th>Foursquare</th>
+                        <th><i class="fab fa-google fa-lg gmaps_color"> </i> Google</th>
+                        <th><i class="fab fa-yelp fa-lg yelp_color"> </i> Yelp</th>
+                        <th><i class="fab fa-foursquare fa-lg foursquare_color"> </i> Foursquare</th>
                     </tr>
                 </thead>
             </table>
@@ -160,7 +160,7 @@
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
     <script src="js/jquery.dataTables.min.js"></script>        
-    <script src="main.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

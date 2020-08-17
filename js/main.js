@@ -1,6 +1,48 @@
+function searchClick() {
+
+    key_val = $('#keyword_button').text().toLowerCase();
+    key_val = key_val.replace(/\s/g, "");
+    location_val = $('#location_button').text().toLowerCase();
+    location_val = location_val.replace(/\s/g, "");
+    
+    if (key_val == 'keyword') {
+	alert('Choose a search keyword from the keywords dropdown');
+    }
+    else if (location_val == 'location') {
+	alert('Choose a location from the locations dropdown');
+    }
+    else {
+	new_url = "http://3.87.162.105:8181/query?location=" + location_val + "&keyword=" + key_val
+	if ( ! $.fn.DataTable.isDataTable( '#output_table' )) {
+	    document.pizza_data_table = $('#output_table').DataTable({
+		"searching":  false,
+		"lengthChange":  false,
+		"paging": false,
+		"info": false,
+		"columns": [
+		    { "data": "Rank", "orderable": true },
+		    { "data": "Name", "orderable" : true },
+		    { "data": "Address", "orderable" : true },
+		    { "data": "Distance", "orderable" : true, "className": "text-right" },
+		    { "data": "Google Maps", "orderable" : true, "className": "text-right" },
+		    { "data": "Yelp", "orderable" : true, "className": "text-right" },
+		    { "data": "Foursquare", "orderable" : true, "className": "text-right" }
+		],
+		"ajax": {
+		    url: new_url,
+		    dataSrc: ""
+		}
+	    });
+	}
+	else {
+	    document.pizza_data_table.ajax.url( new_url ).load();
+	}
+    }
+}
+
+
 $(document).ready(function(){
     $('.overlay').height($(window).height());
-
 
     locations = {
         "midtown": {'pretty_name': 'Midtown', coords: '40.7484, -73.9857'},
@@ -15,8 +57,8 @@ $(document).ready(function(){
     
     for (var property in locations) {
         if (locations.hasOwnProperty(property)) {
-            $("#" + property).button().click(function(){
-                $("#location_button").text($(this).text())
+            $("#" + property).button().click(function() {
+                $("#location_button").text($(this).text());
             })
         }
       }
@@ -25,34 +67,18 @@ $(document).ready(function(){
         $("#keyword_button").text($(this).text());
         $("#page_title").text("Pizza Pizza Pizza");
         $("body").css("background-image", "url('images/pizza.jpg')");
-    })
+    });
 
     $("#coffee_action").button().click(function(){
         $("#keyword_button").text($(this).text())
         $("#page_title").text("Coffee Coffee Coffee");
         $("body").css("background-image", "url('images/coffee.jpg')");
-    })
-
-    $('#output_table').DataTable({
-        "searching":  false,
-        "lengthChange":  false,
-	"paging": false,
-	"info": false,
-        "columns": [
-	    { "data": "Rank", "orderable": true },
-	    { "data": "Name", "orderable" : true },
-	    { "data": "Address", "orderable" : true },
-	    { "data": "Distance", "orderable" : true, "className": "text-right" },
-	    { "data": "Google Maps", "orderable" : true, "className": "text-right" },
-	    { "data": "Yelp", "orderable" : true, "className": "text-right" },
-	    { "data": "Foursquare", "orderable" : true, "className": "text-right" }
-	],
-	"ajax": {
-	    url: "http://3.87.162.105:8181/",
-	    dataSrc: ""
-	}
     });
-})
+
+    $("#search_button").click(searchClick);
+
+});
+
 /*    $.ajax({
 	dataType: 'json',
 	url: 'http://localhost:8181',

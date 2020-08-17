@@ -3,19 +3,16 @@ from flask import Response
 from flask_jsonpify import jsonpify, jsonify
 from flask_cors import CORS, cross_origin
 
-# run pizza.ipynb in a flask server
+# run concept of pizza.ipynb using a flask server
 # http://localhost:8501/query?location=brooklynheights&keyword=coffee
 
-# show form
-# show querying status / progress bar
-# show map
-# html getting the json
-# sortable table
-# dropdown coffee / pizza
-# dropdown locations
-# swap background image https://www.papajohns.com/free-pizza/img/hero-free-pizza.jpg
-# https://wallpaperaccess.com/black-coffee
-# make it work on colab
+# center the table, center the form widgets
+# start with empty table
+# clear the table when dropdown changes
+# append the table header on first search
+# resize overlay when body resizes
+
+# show the map
 
 #######################################################
 # home
