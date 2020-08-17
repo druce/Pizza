@@ -16,7 +16,7 @@
 body {
     background-image: url("../images/pizza.jpg");
     background-size: cover;
-    background-position: center;
+    background-position: left top;
     position: relative;
 }
 

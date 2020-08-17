@@ -1,3 +1,12 @@
+function set_bg() {
+    $('.overlay').height($(window).height());
+    key_val = $('#keyword_button').text().toLowerCase();
+    bgprop = "url('images/" + key_val + ".jpg')"
+    $("body").css("background-image", bgprop);
+    $("body").css("background-size", "cover");
+    $("body").css("background-position", "left top");
+}
+
 function searchClick() {
 
     key_val = $('#keyword_button').text().toLowerCase();
@@ -13,7 +22,19 @@ function searchClick() {
     }
     else {
 	new_url = "http://3.87.162.105:8181/query?location=" + location_val + "&keyword=" + key_val
-	if ( ! $.fn.DataTable.isDataTable( '#output_table' )) {
+	if ( ! $.fn.DataTable.isDataTable( '#output_table' )) {  // first call, create table
+	    $("#output_table").html('                <thead> \
+                    <tr style="text-align: right;"> \
+                        <th>Rank</th> \
+                        <th>Name</th> \
+                        <th>Address</th> \
+                        <th>Distance</th> \
+                        <th><i class="fab fa-google fa-lg gmaps_color"> </i> Google</th> \
+                        <th><i class="fab fa-yelp fa-lg yelp_color"> </i> Yelp</th> \
+                        <th><i class="fab fa-foursquare fa-lg foursquare_color"> </i> Foursquare</th> \
+                    </tr> \
+                </thead> \
+                ');
 	    document.pizza_data_table = $('#output_table').DataTable({
 		"searching":  false,
 		"lengthChange":  false,
@@ -33,9 +54,12 @@ function searchClick() {
 		    dataSrc: ""
 		}
 	    });
+	    // call me crazy but the ajax makes the background zoom?
+	    set_bg();
 	}
 	else {
 	    document.pizza_data_table.ajax.url( new_url ).load();
+	    set_bg();
 	}
     }
 }
@@ -66,13 +90,13 @@ $(document).ready(function(){
     $("#pizza_action").button().click(function(){
         $("#keyword_button").text($(this).text());
         $("#page_title").text("Pizza Pizza Pizza");
-        $("body").css("background-image", "url('images/pizza.jpg')");
+	set_bg();
     });
 
     $("#coffee_action").button().click(function(){
         $("#keyword_button").text($(this).text())
         $("#page_title").text("Coffee Coffee Coffee");
-        $("body").css("background-image", "url('images/coffee.jpg')");
+	set_bg();
     });
 
     $("#search_button").click(searchClick);

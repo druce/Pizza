@@ -6,12 +6,10 @@ from flask_cors import CORS, cross_origin
 # run concept of pizza.ipynb using a flask server
 # http://localhost:8501/query?location=brooklynheights&keyword=coffee
 
-# center the table, center the form widgets
-# start with empty table
-# clear the table when dropdown changes
-# append the table header on first search
-# resize overlay when body resizes
-
+# title - merged results
+# weird zooming of background - define a function to get the data, apply to table, and fix background
+# rerun with 1000m
+# add link to gmaps/yelp/foursquare search
 # show the map
 
 #######################################################
