@@ -7,8 +7,12 @@
         "example": "example"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "lite-server"
+        "start": "npm run watch:all",
+	"lite": "lite-server",
+        "scss": "node-sass -o css/ css/",
+        "watch:scss": "onchange 'css/*.scss' -- npm run scss",
+        "watch:all": "parallelshell 'npm run watch:scss' 'npm run lite'",
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
         "type": "git",
@@ -22,7 +26,10 @@
     },
     "homepage": "https://github.com/druce/Pizza#readme",
     "devDependencies": {
-        "minimist": ">=1.2.3",
-    	"lite-server": ">=2.5.4"
+        "lite-server": "^2.5.4",
+        "minimist": "^1.2.5",
+        "node-sass": "^4.14.1",
+        "onchange": "^7.0.2",
+        "parallelshell": "^3.0.2"
     }
 }

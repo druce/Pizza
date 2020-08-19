@@ -1,93 +1,70 @@
-.navbar {
-    background: #aa3311;
-}
-
-.nav-link,
-.navbar-brand {
-    color: #fff;
-    cursor: pointer;
-}
-
-.nav-link:hover,
-.navbar-brand:hover {
-    color: #cfc;
-}
-
 body {
-    background-image: url("../images/pizza.jpg");
-    background-size: cover;
-    background-position: left top;
-    position: relative;
-}
+  background-image: url("../images/pizza.jpg");
+  background-size: cover;
+  background-position: left top;
+  position: relative; }
 
 .overlay {
-    position: absolute;
-    min-height: 740px;
-    width: 100%;
-    left: 0;
-    top: 0;
-    background: rgba(0, 0, 0, 0.5);
-}
+  position: absolute;
+  min-height: 740px;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5); }
+
+.navbar {
+  background: #aa3311; }
+  .navbar .nav-link,
+  .navbar .navbar-brand {
+    color: white;
+    cursor: pointer; }
+  .navbar .nav-link:hover,
+  .navbar .navbar-brand:hover {
+    color: #ccffcc; }
 
 .jumbotron {
-    background: rgba(0, 0, 0, 0.0);
-    color: #fff;
-}
+  background: rgba(0, 0, 0, 0);
+  color: white; }
 
 #keyword_button,
 #location_button {
-    background: #6ab446;
-    color: white;
-}
+  background: #6ab446;
+  color: white; }
 
 #content {
-    background: rgba(0, 0, 0, 0.0);
-    color: #fff;
-}
+  background: rgba(0, 0, 0, 0);
+  color: white; }
 
 #output {
-    min-height: 150px;
-;
-}
+  min-height: 150px;
+  padding-bottom: 2rem !important; }
 
 #output_table {
-    font-size: 10pt;
-    color: black;
-    background: #edc;    
-}
-
-#output_table tr { 
+  font-size: 10pt;
+  color: black;
+  background: #eeddcc; }
+  #output_table tr {
     overflow: hidden;
     height: 14px;
-    white-space: nowrap;
-}
-
-#output_table td { 
+    white-space: nowrap; }
+  #output_table td {
     text-overflow: ellipsis;
-    padding: 4px 4px 4px 4px;    
-}
+    padding: 4px 4px 4px 4px; }
 
 .footer {
-    background: rgba(255    , 127, 127, 0.5);
-    color: white;
-}
-.footer_link {
-    color: white;      
-}
+  background: #aa3311;
+  color: white; }
+  .footer a {
+    color: white; }
 
-.github_color {
-/*    color: #721779; */
-    color: white; 
-}
+.github_cl {
+  color: white; }
 
-.gmaps_color {
-    color: #cc5641;
-}
+.gmaps_cl {
+  color: #cc5641; }
 
-.yelp_color {
-    color: #d32323;
-}
+.yelp_cl {
+  color: #d32323; }
 
-.foursquare_color {
-    color: #d56079
-}
+.foursquare_cl {
+  color: #d56079; }

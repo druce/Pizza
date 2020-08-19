@@ -7,12 +7,12 @@ latlong_enabled = False
 # run pizza.ipynb using a flask server
 # http://localhost:8501/query?location=brooklynheights&keyword=coffee
 
-# move the form up a little
 # index2.html with keyword, lat, lng
 # weird zooming of background - define a function to get the data, apply to table, and fix background
 # 3 links across the bottom to gmaps/yelp/foursquare search
-# show the map
+# scss
 # set up dist directory
+# show the map
 # batch job to make dist
 # batch job to run app server and lite server locally
 
