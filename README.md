@@ -6,12 +6,25 @@ Needs
 - Yelp key in yelpkey.txt get one from [Yelp](https://www.yelp.com/developers/documentation/v3)
 - Foursquare ID and secret in foursquare_id.txt, foursquare_secret.txt, get them from [Foursquare](https://developer.foursquare.com/docs/places-api/getting-started/)
 
+Run pizza.ipynb in Jupyter
+
 For Google maps in Jupyter add the gmaps extension
-- conda install jupyter_contrib_nbextensions
-- conda install -c conda-forge gmaps
-- jupyter nbextension enable --py gmaps
+- `conda install jupyter_contrib_nbextensions`
+- `conda install -c conda-forge gmaps`
+- `jupyter nbextension enable --py gmaps`
+
+For sortable grid dataframes:
+- `pip install qgrid`
+- `jupyter nbextension enable --py --sys-prefix qgrid`
 
 See requirements.txt for additional requirements
+
+To run web app locally with docker
+app server
+- `docker build . -t pizza`
+- `docker run -p 8181:80 --name pizza --rm pizza &`
+- open index.html or `npm start`
+
 
 | Name	| Address | GMaps rating | Yelp rating | Foursquare rating | nratings | bayes_score |
 | ----	| ------- | ------------ | ----------- | ----------------- | -------- | ----------- |

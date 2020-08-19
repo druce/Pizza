@@ -1,3 +1,5 @@
+document.pizza_url = 'localhost:8181';
+
 function set_bg() {
     $('.overlay').height($(window).height());
     key_val = $('#keyword_button').text().toLowerCase();
@@ -21,7 +23,7 @@ function searchClick() {
 	alert('Choose a location from the locations dropdown');
     }
     else {
-	new_url = "http://3.87.162.105:8181/query?location=" + location_val + "&keyword=" + key_val
+	new_url = "http://" + document.pizza_url + "/query?location=" + location_val + "&keyword=" + key_val
 	if ( ! $.fn.DataTable.isDataTable( '#output_table' )) {  // first call, create table
 	    $("#output_table").html('                <thead> \
                     <tr style="text-align: right;"> \
