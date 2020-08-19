@@ -1,28 +1,28 @@
 {
-    "name": "Pizza",
+    "name": "pizza",
     "version": "1.0.0",
     "description": "Find highest rated pizza (or other query string) in Google Maps by distance from a location",
     "main": "main.js",
     "directories": {
-	"example": "example"
+        "example": "example"
     },
     "scripts": {
-	"test": "echo \"Error: no test specified\" && exit 1",
-	"start": "lite-server"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "lite-server"
     },
     "repository": {
-	"type": "git",
-	"url": "git+https://github.com/druce/Pizza.git"
+        "type": "git",
+        "url": "git+https://github.com/druce/Pizza.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "bugs": {
-	"url": "https://github.com/druce/Pizza/issues"
+        "url": "https://github.com/druce/Pizza/issues"
     },
     "homepage": "https://github.com/druce/Pizza#readme",
     "devDependencies": {
-	"minimist": ">=1.2.3"
-	"lite-server": ">=2.5.4"
+        "minimist": ">=1.2.3",
+    	"lite-server": ">=2.5.4"
     }
 }
