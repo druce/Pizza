@@ -31,9 +31,9 @@ function searchClick() {
                         <th>Name</th> \
                         <th>Address</th> \
                         <th>Distance</th> \
-                        <th><i class="fab fa-google fa-lg gmaps_color"> </i> Google</th> \
-                        <th><i class="fab fa-yelp fa-lg yelp_color"> </i> Yelp</th> \
-                        <th><i class="fab fa-foursquare fa-lg foursquare_color"> </i> Foursquare</th> \
+                        <th><i class="fab fa-google fa-lg gmaps_cl"> </i> Google</th> \
+                        <th><i class="fab fa-yelp fa-lg yelp_cl"> </i> Yelp</th> \
+                        <th><i class="fab fa-foursquare fa-lg foursquare_cl"> </i> Foursquare</th> \
                     </tr> \
                 </thead> \
                 ');
