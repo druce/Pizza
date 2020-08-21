@@ -1,0 +1,8 @@
+node_modules
+apikeys
+
+# emacs cruft and other cruft
+\#*
+*~
+.*
+_*

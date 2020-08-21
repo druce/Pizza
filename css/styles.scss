@@ -1,0 +1,95 @@
+$button-green: #6ab446;
+$green-hover: #ccffcc;
+$background-tomato: #aa3311;
+$background-table: #eeddcc;
+$github: #721779; 
+$gmaps: #cc5641;
+$yelp: #d32323;
+$foursquare: #d56079;
+
+body {
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    min-height: 740px;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.navbar {
+    background: $background-tomato;
+    .nav-link,
+    .navbar-brand {
+        color: white;
+        cursor: pointer;
+    }
+    
+    .nav-link:hover,
+    .navbar-brand:hover {
+        color: $green-hover;
+    }
+}
+
+.jumbotron {
+    background: rgba(0, 0, 0, 0.0);
+    color: white;
+}
+
+#keyword_button,
+#location_button {
+    background: $button-green;
+    color: white;
+}
+
+#content {
+    background: rgba(0, 0, 0, 0.0);
+    color: white;
+}
+
+#output {
+    min-height: 150px;
+    padding-bottom: 2rem!important;
+}
+
+#output_table {
+    font-size: 10pt;
+    color: black;
+    background: $background-table;  
+    tr { 
+        overflow: hidden;
+        height: 14px;
+        white-space: nowrap;
+    }    
+    td { 
+        text-overflow: ellipsis;
+        padding: 4px 4px 4px 4px;    
+    }
+}
+
+.footer {
+    background: rgba(170, 51, 17, 1);
+    color: white;
+    a {
+        color: white;
+    }
+}
+
+.github_cl {
+    color: white;
+}
+
+.gmaps_cl {
+    color: $gmaps;
+}
+
+.yelp_cl {
+    color: $yelp;
+}
+
+.foursquare_cl {
+    color: $foursquare
+}

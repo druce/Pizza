@@ -1,7 +1,4 @@
 body {
-  background-image: url("../images/pizza.jpg");
-  background-size: cover;
-  background-position: left top;
   position: relative; }
 
 .overlay {

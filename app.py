@@ -8,12 +8,9 @@ latlong_enabled = False
 # http://localhost:8501/query?location=brooklynheights&keyword=coffee
 
 # index2.html with keyword, lat, lng
-# weird zooming of background - define a function to get the data, apply to table, and fix background
-# 3 links across the bottom to gmaps/yelp/foursquare search
-# scss
-# set up dist directory
 # show the map
-# batch job to make dist
+# set up dist directory
+# npm script to make dist
 # batch job to run app server and lite server locally
 
 #######################################################
