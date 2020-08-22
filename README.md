@@ -25,6 +25,7 @@ app server
 - `docker run -p 8181:80 --name pizza --rm pizza &`
 - open index.html or `npm start`
 
+To deploy the web app to Amazon Container Service see `deploy.md`
 
 | Name	| Address | GMaps rating | Yelp rating | Foursquare rating | nratings | bayes_score |
 | ----	| ------- | ------------ | ----------- | ----------------- | -------- | ----------- |

@@ -6,6 +6,7 @@ $github: #721779;
 $gmaps: #cc5641;
 $yelp: #d32323;
 $foursquare: #d56079;
+$leaflet: #bbdd66;
 
 body {
     position: relative;
@@ -92,4 +93,8 @@ body {
 
 .foursquare_cl {
     color: $foursquare
+}
+
+.leaflet_cl {
+    color: $leaflet
 }

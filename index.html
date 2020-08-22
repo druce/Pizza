@@ -17,7 +17,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css"
         integrity="sha512-f8mUMCRNrJxPBDzPJx3n+Y5TC5xp6SmStstEfgsDXZJTcxBakoB5hvPLhAfJKa9rCvH+n3xpJ2vQByxLk4WP2g=="
         crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">        
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin=""/>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">    
@@ -110,22 +113,28 @@
             </form>
         </div>
 
-        <div class="row row-content justify-content-center align-items-center" id="output">
-          <div class="col-12 col-md-10 pb-5">
-            <table id="output_table" class="table table-striped table-bordered pb-2" style="width:100%">
-            </table>
+        <div class="row row-content justify-content-center align-items-center">
+            <div class="col-12 col-md-10" id="leaflet_map">
+            </div>
+          </div>
+
+          <div class="row row-content justify-content-center align-items-center" id="output">
+            <div class="col-12 col-md-10 pb-5">
+              <table id="output_table" class="table table-striped table-bordered pb-2" style="width:100%">
+              </table>
+            </div>
           </div>
         </div>
-    </div>
 
     <footer class="footer fixed-bottom">
         <div class="container">
           <div class="row justify-content-center align-items-center">
             <div class="col-auto">Made with
-                <i class="fab fa-github fa-lg github_cl"> </i> <a href="#" class="footer_link"> GitHub</a>
-                <i class="fab fa-google fa-lg gmaps_cl"> </i> <a href="#" class="footer_link">Google Maps</a>
-                <i class="fab fa-yelp fa-lg yelp_cl"> </i> <a href="#" class="footer_link">Yelp</a>
-                <i class="fab fa-foursquare fa-lg foursquare_cl"> </i> <a href="#" class="footer_link">Foursquare</a>
+                <i class="fab fa-github fa-lg github_cl"> </i> <a href="https://github.com/druce/pizza" class="footer_link"> GitHub</a>
+                <i class="fab fa-google fa-lg gmaps_cl"> </i> <a href="https://www.google.com/maps" class="footer_link">Google Maps</a>
+                <i class="fab fa-yelp fa-lg yelp_cl"> </i> <a href="https://www.yelp.com/" class="footer_link">Yelp</a>
+                <i class="fab fa-foursquare fa-lg foursquare_cl"> </i> <a href="https://foursquare.com/city-guide" class="footer_link">Foursquare</a>
+                <i class="fas fa-leaf fa-lg leaflet_cl"></i> <a href="https://leafletjs.com/">Leaflet</a>
             </div>
           </div>
         </div>
@@ -139,6 +148,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
         integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>        
     <script src="js/jquery.dataTables.min.js"></script>        
     <script src="js/main.js"></script>
 </body>

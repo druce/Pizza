@@ -1,7 +1,7 @@
 document.pizza_url = 'localhost:8181';
 
 function set_bg() {
-    // background resized to match screen dimensions
+    // set background based on dropdown value and resize to match screen dimensions
     // this is messed up on vertical phones, maybe should pick from multiple backgrounds based on aspect ratio
     $('.overlay').height($(window).height());
     key_val = $('#keyword_button').text().toLowerCase().replace(/\s/g, "");
@@ -13,38 +13,20 @@ function set_bg() {
     $("body").css("background-size", window.innerWidth + "px " + window.innerHeight + "px");
     $('.overlay').height(Math.max($("body").height(), window.innerHeight));
     $('.overlay').width(Math.max($("body").width(), window.innerWidth));
-
 }
 
-function getData() {
-    // get data explicitly into an array
-    // works but not used
-    // build url with params
-    // first write to console
-    // then update the table
-
-    // console.log('aloha');
-    $.ajax({
-        dataType: 'json',
-        url: 'http://localhost:8181',
-        success: function (data) {
-            console.log('aloha3');
-            console.log(data.length);
-            outstr = "";
-            for (var i = 0, len = data.length; i < len; i++) {
-                console.log(data[i]);
-                outstr += (i + 1 + "," + data[i].Name + "," + data[i].Address + "," + data[i]['Google Maps'] + "," + data[i]['Yelp'] + "," + data[i]['Foursquare']);
-            }
-            console.log(outstr);
-        },
-        error: function (data) {
-            console.log('error');
-            console.log(data);
-        }
-    });
-    // console.log('aloha 2');
-
+function markerFunction(id) {
+    // popup based on title. given marker title, loop through all markers and popup specified 
+    for (var i in document.markers) {
+        var marker = document.markers[i];
+        var markerID = marker.options.title;
+        if (markerID == id){
+            marker.openPopup();
+            break;
+        };
+    }
 }
+
 function searchClick() {
 
     key_val = $('#keyword_button').text().toLowerCase();
@@ -89,10 +71,22 @@ function searchClick() {
                 ]
             });
             $.get(new_url, function (data) {
+                // show data for debug
+                // for (var i = 0, len = data.length; i < len; i++) {
+                //     console.log(data[i]);
+                // }
                 document.pizza_data_table.clear();
                 document.pizza_data_table.rows.add(data);
                 document.pizza_data_table.draw();
                 set_bg();
+                getMap(location_val, data);
+                // ideally take each row and give cell a link or rollover to popup corresponding marker on map
+                // alert works but need more jquery mojo for the rollover
+                // $("table > tbody > tr").each(function () {
+                //     z = $(this).find('td').eq(1)
+                //     alert(z.text())
+                //     z.addEventListener('click', function(){console.log('clicked a row')} );
+                // });
             });
         }
         else {
@@ -101,27 +95,77 @@ function searchClick() {
                 document.pizza_data_table.rows.add(data);
                 document.pizza_data_table.draw();
                 set_bg();
+                getMap(location_val, data);
             });
         }
+    }
+}
+
+function getMap(location_val, data) {
+    $("#leaflet_map").css("height", "384px");
+    // location_val = $('#location_button').text().toLowerCase().replace(/\s/g, "");
+    location_obj = document.locations[location_val];
+    var accessToken = 'pk.eyJ1IjoiZHJ1Y2V2IiwiYSI6ImNqbWt4YmJ6ejAyYXcza3A1djhya254ZXMifQ.ZkDU7jNP3QGicJpGRRMF2Q';
+    if (document.hasOwnProperty('mymap')) {
+        document.mymap.remove()
+    }
+    document.mymap = L.map('leaflet_map').setView(location_obj.coords, 14);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: accessToken
+    }).addTo(document.mymap);
+
+    outstr="";
+    for (var i = 0, len = data.length; i < len; i++) {
+        console.log(data[i]);
+        rating_html = '';
+        if (data[i]['Google Maps'] != null) {
+            rating_html += "<dt>Google rating</dt><dd>" +data[i]['Google Maps'] + "</dd> ";
+        }
+        if (data[i]['Yelp'] != null) {
+            rating_html += "<dt>Yelp rating</dt><dd>" + data[i]['Yelp'] + "</dd> ";
+        }
+        if (data[i]['Foursquare'] != null) {
+            rating_html += "<dt>Foursquare rating</dt><dd>" + data[i]['Foursquare'] + "</dd> ";
+        }
+        
+        popup_html = " \
+<dl> \
+<dt>Name</dt><dd>" + data[i].Name + "</dd> \
+<dt>Address</dt><dd>" + data[i].Address + "</dd> \
+" + rating_html + " \
+</dl> \
+"
+        var marker = L.marker([data[i].Lat,  data[i].Lng], {title:"marker_"+i}).addTo(document.mymap).bindPopup(popup_html);
+        marker.on('mouseover',function(ev) {
+            this.openPopup();
+        });
+        marker.on('mouseout',function(ev) {
+            this.closePopup();
+        });
     }
 }
 
 $(document).ready(function () {
     set_bg();
 
-    locations = {
-        "midtown": { 'pretty_name': 'Midtown', coords: '40.7484, -73.9857' },
-        "downtown": { 'pretty_name': 'Downtown', coords: '40.7077443,-74.0139089' },
-        "uppereastside": { 'pretty_name': 'Upper East Side', coords: '40.7711473,-73.9661166' },
-        "upperwestside": { 'pretty_name': 'Upper West Side', coords: '40.778794,-73.984257' },
-        "brooklynheights": { 'pretty_name': 'Brooklyn Heights', coords: '40.6915812,-73.9954095' },
-        "grandarmyplaza": { 'pretty_name': 'Grand Army Plaza', coords: '40.671872,-73.972544' },
-        "bayridge": { 'pretty_name': 'Bay Ridge', coords: '40.6292633,-74.0309554' },
-        "williamsburg": { 'pretty_name': 'Williamsburg', coords: '40.7144609,-73.9553373' },
+    document.locations = {
+        "midtown": { 'pretty_name': 'Midtown', coords: [40.7484, -73.9857] },
+        "downtown": { 'pretty_name': 'Downtown', coords: [40.7077443,-74.0139089] },
+        "uppereastside": { 'pretty_name': 'Upper East Side', coords: [40.7711473,-73.9661166] },
+        "upperwestside": { 'pretty_name': 'Upper West Side', coords: [40.778794,-73.984257] },
+        "brooklynheights": { 'pretty_name': 'Brooklyn Heights', coords: [40.6915812,-73.9954095] },
+        "grandarmyplaza": { 'pretty_name': 'Grand Army Plaza', coords: [40.671872,-73.972544] },
+        "bayridge": { 'pretty_name': 'Bay Ridge', coords: [40.6292633,-74.0309554] },
+        "williamsburg": { 'pretty_name': 'Williamsburg', coords: [40.7144609,-73.9553373] },
     }
 
-    for (var property in locations) {
-        if (locations.hasOwnProperty(property)) {
+    for (var property in document.locations) {
+        if (document.locations.hasOwnProperty(property)) {
             $("#" + property).button().click(function () {
                 $("#location_button").text($(this).text());
             })
@@ -141,22 +185,31 @@ $(document).ready(function () {
     });
 
     $("#search_button").click(searchClick);
+
 });
 
-/*    $.ajax({
-	dataType: 'json',
-	url: 'http://localhost:8181',
-	success: function(data) {
-	    outstr = "";
-	    for ( var i=0, len=data.length; i<len; i++ ) {
-		outstr += (i+1 + "," + data[i].name + "," + data[i].address + "," + data[i].gmaps_rating + "," + data[i].yelp_rating + "," + data[i].foursquare_rating);
-	    }
-	    $("#results").html(outstr);
-	},
-	error: function(data) {
-	    console.log('error');
-	    console.log(data);
-	}
+function getData() {
+    // get data explicitly into an array
+    // not used, we just use native datatables, set contents from json
+    // console.log('getdata 1');
+    $.ajax({
+        dataType: 'json',
+        url: 'http://localhost:8181',
+        success: function (data) {
+            console.log('aloha3');
+            console.log(data.length);
+            outstr = "";
+            for (var i = 0, len = data.length; i < len; i++) {
+                console.log(data[i]);
+                outstr += (i + 1 + "," + data[i].Name + "," + data[i].Address + "," + data[i]['Google Maps'] + "," + data[i]['Yelp'] + "," + data[i]['Foursquare']);
+            }
+            console.log(outstr);
+        },
+        error: function (data) {
+            console.log('error');
+            console.log(data);
+        }
     });
-})
-*/
+    // console.log('getdata 2');
+
+}

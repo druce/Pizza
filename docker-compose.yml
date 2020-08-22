@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    image: 840464442216.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
+    ports:
+      - "8181:8181"
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: pizza
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: web

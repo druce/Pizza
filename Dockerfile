@@ -18,7 +18,7 @@ COPY . /app
 
 COPY apikeys /app/apikeys
 
-EXPOSE 80
+EXPOSE 8181
 
 ENTRYPOINT [ "python3" ]
 
