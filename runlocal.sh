@@ -1,7 +1,7 @@
 #!/bin/zsh
 # run app server in container
 # build container
-# docker build . -t pizza
+docker build . -t pizza
 docker run -p 8181:8181 --name pizza --rm pizza &
 
 # or just run local app
@@ -14,3 +14,4 @@ docker run -p 8181:8181 --name pizza --rm pizza &
 npm start
 
 # or just open the index.html in browser
+# IP address for app server is in js/main.js

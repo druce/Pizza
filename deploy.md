@@ -1,17 +1,16 @@
-# How Deploy Container To AWS Elastic Container Service
+# How To Deploy Container To AWS Elastic Container Service
 
 Based on docs here: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-cli-tutorial-fargate.html
 
-1) Install and configure AWS CLI
-https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html
+1) [Install and configure AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html)
 
-2) Install ECS CLI
-https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html
+2) [Install ECS CLI](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ECS_CLI_installation.html)
 
 3) Assume role if needed
 
-- Create the file `task-execution-assume-role.json` (see example) 
-  ```aws iam --region us-east-1 create-role --role-name ecsTaskExecutionRole --assume-role-policy-document file://task-execution-assume-role.json```
+- Create the file `task-execution-assume-role.json` (see [example](task-execution-assume-role.json)) 
+
+```aws iam --region us-east-1 create-role --role-name ecsTaskExecutionRole --assume-role-policy-document file://task-execution-assume-role.json```
 
 - Attach role policy
 
@@ -48,13 +47,13 @@ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
 
 7) Start the container 
 
-- Make docker-compose.yml file (see example)
-- Make ecs-params.yml file
+- Make docker-compose.yml file (see [example](docker-compose.yml). Specify correct ECR image and region)
+- Make ecs-params.yml file (see [example](ecs-params.yml). Specify correct subnets and security group)
 
 ```ecs-cli compose --project-name pizza service up --create-log-groups --cluster-config pizza --ecs-profile pizza-profile```
 
-Go to ECS console and you should see your cluster running
-https://console.aws.amazon.com/ecs/home?region=us-east-1#/clusters
+Go to AWS ECS console and you should see your cluster running.
+
 
 8) Get info on your container
 
