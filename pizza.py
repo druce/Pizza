@@ -235,6 +235,9 @@ def dedupe(dedupe_list):
         .rename(columns={'rating': 'foursquare_rating', 'nratings': 'foursquare_nratings'})
     merge_df['foursquare_rating_std'] = StandardScaler().fit_transform(merge_df[['foursquare_rating']])
 
+    merge_df['distance'] = merge_df.apply(lambda row: distance((row['lat'], row['lng']), location_coords).km,
+                                          axis=1)
+    
     # bayes score
     rating_cols = ['gmaps_rating_std', 'yelp_rating_std', 'foursquare_rating_std']
     merge_df['nratings'] = merge_df[rating_cols].count(axis=1)

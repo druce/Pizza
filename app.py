@@ -9,7 +9,6 @@ latlong_enabled = False
 
 # TODO:
 # merge all pickles and retrain dedupe on all
-# add ice cream
 # add nratings_gmaps, nratings_yelp, nratings_foursquare to pickle, to api json, and maps
 # add rank and distance to marker popup etxt 
 # add links from table to map, need to walk table DOM and add click or rollover event http://jsfiddle.net/74g6ts4r/
