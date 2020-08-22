@@ -42,8 +42,8 @@ import folium
 
 #######################################################
 
-MIN_USER_RATINGS = 40
-MIN_RATING = 3
+MIN_USER_RATINGS = 20
+MIN_RATING = 0
 NRESULTS = 50
 RADIUS = 1000
 
@@ -133,7 +133,11 @@ def yelp_get_df(location_coords, keyword):
         yelp_df['distance'] = yelp_df.apply(lambda row: distance((row['lat'], row['lng']), location_coords).km,
                                               axis=1)
         
-        return yelp_df
+        if yelp_df.empty:
+            return None
+        else:
+            return yelp_df
+
     else:
         return None
 
@@ -172,8 +176,7 @@ def foursquare_get_df(location_coords, keyword):
         except FoursquareException as e:
             print("Foursquare exception", type(e), str(e))
         except Exception as e:
-            pass
-            # sometimes no rating ... probably not popular enough
+            continue
             # sometimes no rating ... probably not popular enough
             # print(type(e), str(e))
             # print(traceback.format_exc())
@@ -191,7 +194,10 @@ def foursquare_get_df(location_coords, keyword):
         
         foursquare_df['distance'] = foursquare_df.apply(lambda row: distance((row['lat'], row['lng']), location_coords).km,
                                                         axis=1)
-        return foursquare_df
+        if foursquare_df.empty:
+            return None
+        else:
+            return foursquare_df
     else:
         return None
 
@@ -215,18 +221,18 @@ def dedupe(dedupe_list):
 
     # merge ratings by source
     merge_df = cluster_df \
-        .merge(venues_df.loc[venues_df['source']=='0'][['cluster','rating']], on='cluster', how='outer') \
-        .rename(columns={'rating': 'gmaps_rating'})
+        .merge(venues_df.loc[venues_df['source']=='0'][['cluster','rating', 'nratings']], on='cluster', how='outer') \
+        .rename(columns={'rating': 'gmaps_rating', 'nratings': 'gmaps_nratings'})
     merge_df['gmaps_rating_std'] = StandardScaler().fit_transform(merge_df[['gmaps_rating']])
 
     merge_df = merge_df \
-        .merge(venues_df.loc[venues_df['source']=='1'][['cluster','rating']], on='cluster', how='outer') \
-        .rename(columns={'rating': 'yelp_rating'})
+        .merge(venues_df.loc[venues_df['source']=='1'][['cluster','rating', 'nratings']], on='cluster', how='outer') \
+        .rename(columns={'rating': 'yelp_rating', 'nratings': 'yelp_nratings'})
     merge_df['yelp_rating_std'] = StandardScaler().fit_transform(merge_df[['yelp_rating']])
 
     merge_df = merge_df \
-        .merge(venues_df.loc[venues_df['source']=='2'][['cluster','rating']], on='cluster', how='outer') \
-        .rename(columns={'rating': 'foursquare_rating'})
+        .merge(venues_df.loc[venues_df['source']=='2'][['cluster','rating', 'nratings']], on='cluster', how='outer') \
+        .rename(columns={'rating': 'foursquare_rating', 'nratings': 'foursquare_nratings'})
     merge_df['foursquare_rating_std'] = StandardScaler().fit_transform(merge_df[['foursquare_rating']])
 
     # bayes score

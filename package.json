@@ -8,10 +8,15 @@
     },
     "scripts": {
         "start": "npm run watch:all",
-	"lite": "lite-server",
+        "lite": "lite-server",
         "scss": "node-sass -o css/ css/",
         "watch:scss": "onchange 'css/*.scss' -- npm run scss",
         "watch:all": "parallelshell 'npm run watch:scss' 'npm run lite'",
+        "clean": "rimraf dist",
+        "imagemin": "imagemin images/* --out-dir='dist/images'",
+	"copyimages": "copyfiles -f images/* dist/images",
+	"usemin": "usemin index.html -d dist --htmlmin -o dist/index.html",
+	"build": "npm run clean && npm run copyimages && npm run usemin",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -26,10 +31,15 @@
     },
     "homepage": "https://github.com/druce/Pizza#readme",
     "devDependencies": {
+        "cssmin": "^0.4.3",
+        "htmlmin": "0.0.7",
         "lite-server": "^2.5.4",
         "minimist": "^1.2.5",
         "node-sass": "^4.14.1",
         "onchange": "^7.0.2",
-        "parallelshell": "^3.0.2"
+        "parallelshell": "^3.0.2",
+        "rimraf": "^3.0.2",
+        "uglifyjs": "^2.4.11",
+        "usemin-cli": "^0.6.0"
     }
 }

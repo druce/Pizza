@@ -1,8 +1,10 @@
 node_modules
 apikeys
-
+dist
+bak
 # emacs cruft and other cruft
 \#*
 *~
 .*
 _*
+*.tgz

@@ -1,5 +1,3 @@
-document.pizza_url = 'localhost:8181';
-
 function set_bg() {
     // set background based on dropdown value and resize to match screen dimensions
     // this is messed up on vertical phones, maybe should pick from multiple backgrounds based on aspect ratio
@@ -121,7 +119,7 @@ function getMap(location_val, data) {
 
     outstr="";
     for (var i = 0, len = data.length; i < len; i++) {
-        console.log(data[i]);
+        // console.log(data[i]);
         rating_html = '';
         if (data[i]['Google Maps'] != null) {
             rating_html += "<dt>Google rating</dt><dd>" +data[i]['Google Maps'] + "</dd> ";
@@ -151,6 +149,8 @@ function getMap(location_val, data) {
 }
 
 $(document).ready(function () {
+    // document.pizza_url = '3.237.198.63:8181';
+    document.pizza_url = 'localhost:8181';
     set_bg();
 
     document.locations = {
@@ -174,13 +174,19 @@ $(document).ready(function () {
 
     $("#pizza_action").button().click(function () {
         $("#keyword_button").text($(this).text());
-        $("#page_title").text("Pizza Pizza Pizza");
+        $("#page_title").text("Pizza…Pizza…Pizza");
         set_bg();
     });
 
     $("#coffee_action").button().click(function () {
         $("#keyword_button").text($(this).text())
-        $("#page_title").text("Coffee Coffee Coffee");
+        $("#page_title").text("Coffee…Coffee…Coffee");
+        set_bg();
+    });
+
+    $("#icecream_action").button().click(function () {
+        $("#keyword_button").text($(this).text())
+        $("#page_title").text("Ice Cream…Ice Cream…Ice Cream");
         set_bg();
     });
 

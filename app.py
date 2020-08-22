@@ -8,10 +8,12 @@ latlong_enabled = False
 # http://localhost:8181/query?location=brooklynheights&keyword=coffee
 
 # TODO:
+# merge all pickles and retrain dedupe on all
+# add ice cream
 # add nratings_gmaps, nratings_yelp, nratings_foursquare to pickle, to api json, and maps
 # add rank and distance to marker popup etxt 
-# merge all pickles and retrain dedupe on all
 # add links from table to map, need to walk table DOM and add click or rollover event http://jsfiddle.net/74g6ts4r/
+# install all requirements via npm - retry build step
 # npm script to make dist
 
 #######################################################

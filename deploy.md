@@ -54,7 +54,6 @@ aws ec2 describe-security-groups --filters Name=vpc-id,Values=vpc-123456789012e1
 
 5) Configure security group to allow inbound on the desired port, using the security group-id reported (and correct port and region):
 ```bash
-   
 aws ec2 authorize-security-group-ingress --group-id <group-id> --protocol tcp --port 8181 --cidr 0.0.0.0/0 --region us-east-1
 
 ```
