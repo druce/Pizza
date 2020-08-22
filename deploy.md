@@ -17,7 +17,8 @@ Based on AWS document here: [Tutorial: Creating a Cluster with a Fargate Task Us
   ```aws iam --region us-east-1 attach-role-policy --role-name ecsTaskExecutionRole --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy```
 
 4) Configure credentials, default cluster
-```ecs-cli configure profile --access-key <access-key> --secret-key <secret-key> --profile-name pizza-profile
+```
+ecs-cli configure profile --access-key <access-key> --secret-key <secret-key> --profile-name pizza-profile
 ecs-cli configure --cluster pizza --default-launch-type FARGATE --config-name pizza --region us-east-1
 ecs-cli up --cluster-config pizza --ecs-profile pizza-profile```
 
