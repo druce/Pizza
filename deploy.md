@@ -17,7 +17,7 @@ aws iam --region us-east-1 create-role --role-name ecsTaskExecutionRole --assume
 ```
 
 
-- Attach role policy
+- Attach role policy:
 
 ```bash
 
@@ -25,7 +25,7 @@ aws iam --region us-east-1 attach-role-policy --role-name ecsTaskExecutionRole -
 
 ```
 
-4) Configure credentials, default cluster
+4) Configure credentials, default cluster:
 ```
 ecs-cli configure profile --access-key <access-key> --secret-key <secret-key> --profile-name pizza-profile
 ecs-cli configure --cluster pizza --default-launch-type FARGATE --config-name pizza --region us-east-1
@@ -90,14 +90,15 @@ ecs-cli compose --project-name pizza service up --create-log-groups --cluster-co
 This will take a minute and show some log messages. Go to AWS ECS console and you should see your cluster running.
 
 
-9) Get info on your container
+9) Get info on your container:
 ```bash
 ecs-cli compose --project-name pizza service ps --cluster-config pizza --ecs-profile pizza-profile
-Name                                              State    Ports                        Task          Definition  Healthpizza/0fec210e48734bf1bfca123a88e3a2f1/web  RUNNING  3.237.198.63:8181->8181/tcp  pizza:1       UNKNOWN
+Name                                              State    Ports                        Task          Definition
+Healthpizza/0fec210e48734bf1bfca123a88e3a2f1/web  RUNNING  3.237.198.63:8181->8181/tcp  pizza:1       UNKNOWN
 
 ```
 
-Note the IP address and port, access the service on IP:port
+Note the IP address and port. You should now be able access the service on IP:port.
 
 Note the task id and view logs
 ```bash
@@ -106,7 +107,7 @@ ecs-cli logs --task-id 0fec210e48734bf1bfca123a88e3a2f1 --follow --cluster-confi
 
 ```
 
-10) Shut it down
+10) Shut it down:
 ```bash
 
 ecs-cli compose --project-name tutorial service down --cluster-config tutorial --ecs-profile tutorial-profile
