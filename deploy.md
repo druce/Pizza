@@ -26,7 +26,6 @@ aws iam --region us-east-1 attach-role-policy --role-name ecsTaskExecutionRole -
 ```
 
 4) Configure credentials, default cluster
-   
 ```
    
 ecs-cli configure profile --access-key <access-key> --secret-key <secret-key> --profile-name pizza-profile
@@ -54,25 +53,23 @@ aws ec2 describe-security-groups --filters Name=vpc-id,Values=vpc-123456789012e1
 
 ```
 
-5) Configure security group to allow inbound on the desired port, using the security group-id reported (and correct port and region).
-   ```bash
+5) Configure security group to allow inbound on the desired port, using the security group-id reported (and correct port and region):
+```bash
    
-   aws ec2 authorize-security-group-ingress --group-id <group-id> --protocol tcp --port 8181 --cidr 0.0.0.0/0 --region us-east-1
+aws ec2 authorize-security-group-ingress --group-id <group-id> --protocol tcp --port 8181 --cidr 0.0.0.0/0 --region us-east-1
 
-   ```
+```
 
-6) Create repository (not sure if this is created by default)
-
-   ```bash
+6) Create repository (not sure if this is created by default):
+```bash
    
 aws ecr create-repository --repository-name pizza
 aws ecr describe-repositories
 
 ```
 
-
-7) Push Docker image to ECS
-   ```bash
+7) Push Docker image to ECS:
+```bash
    
 docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) 123412341234.dkr.ecr.us-east-1.amazonaws.com
 docker build . -t pizza
@@ -82,11 +79,11 @@ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
 ```
 
 
-8) Start the container 
+8) Start the container:
 
 - Make docker-compose.yml file (see [example](docker-compose.yml). Specify correct ECR image and region)
 - Make ecs-params.yml file (see [example](ecs-params.yml). Specify correct subnets and security group)
-p
+
 ```bash
 
 ecs-cli compose --project-name pizza service up --create-log-groups --cluster-config pizza --ecs-profile pizza-profile
@@ -97,8 +94,7 @@ This will take a minute and show some log messages. Go to AWS ECS console and yo
 
 
 9) Get info on your container
-
-   ```bash
+```bash
    
 ecs-cli compose --project-name pizza service ps --cluster-config pizza --ecs-profile pizza-profile
 Name                                              State    Ports                        Task          Definition  Healthpizza/0fec210e48734bf1bfca123a88e3a2f1/web  RUNNING  3.237.198.63:8181->8181/tcp  pizza:1       UNKNOWN
@@ -115,12 +111,11 @@ ecs-cli logs --task-id 0fec210e48734bf1bfca123a88e3a2f1 --follow --cluster-confi
 ```
 
 10) Shut it down
+```bash
 
-    ```bash
+ecs-cli compose --project-name tutorial service down --cluster-config tutorial --ecs-profile tutorial-profile
 
-    ecs-cli compose --project-name tutorial service down --cluster-config tutorial --ecs-profile tutorial-profile
-
-    ```
+```
 
 
 
