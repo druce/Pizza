@@ -1,4 +1,4 @@
-Find highest rated pizza (or other query string) in Google Maps by distance from a location
+Find highest rated pizza (or other query string) in Google Maps, Yelp and Foursquare by distance from a location
 
 Needs
 
@@ -6,7 +6,7 @@ Needs
 - Yelp key in yelpkey.txt get one from [Yelp](https://www.yelp.com/developers/documentation/v3)
 - Foursquare ID and secret in foursquare_id.txt, foursquare_secret.txt, get them from [Foursquare](https://developer.foursquare.com/docs/places-api/getting-started/)
 
-Run pizza.ipynb in Jupyter
+Run `pizza.ipynb` in Jupyter
 
 For Google maps in Jupyter add the gmaps extension
 - `conda install jupyter_contrib_nbextensions`
@@ -17,15 +17,14 @@ For sortable grid dataframes:
 - `pip install qgrid`
 - `jupyter nbextension enable --py --sys-prefix qgrid`
 
-See requirements.txt for additional requirements
+See `requirements.txt` for additional requirements
 
-To run web app locally with docker
-app server
+Web app also available: to run locally with docker app server
 - `docker build . -t pizza`
 - `docker run -p 8181:80 --name pizza --rm pizza &`
-- open index.html or `npm start`
+- open index.html or `npm start` (for development, this also runs node services to compile `styles.scss` to `styles.css` and refresh automatically on changes to index.html or main.js)
 
-To deploy the web app to Amazon Container Service see `deploy.md`
+To deploy the web app to Amazon Container Service see [`deploy.md`](deploy.md) 
 
 | Name	| Address | GMaps rating | Yelp rating | Foursquare rating | nratings | bayes_score |
 | ----	| ------- | ------------ | ----------- | ----------------- | -------- | ----------- |
