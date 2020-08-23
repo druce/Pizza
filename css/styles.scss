@@ -72,15 +72,15 @@ body {
 }
 
 .footer {
-    background: rgba(170, 51, 17, 1);
-    color: white;
+    background: $background-table;
+    color: black;
     a {
-        color: white;
+        color: black;
     }
 }
 
 .github_cl {
-    color: white;
+    color: $github;
 }
 
 .gmaps_cl {
@@ -97,4 +97,12 @@ body {
 
 .leaflet_cl {
     color: $leaflet
+}
+
+img.huechange { 
+    filter: hue-rotate(120deg); 
+}
+
+.table_rollover_bold {
+    font-weight: bold;
 }

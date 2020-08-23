@@ -49,13 +49,13 @@ body {
     padding: 4px 4px 4px 4px; }
 
 .footer {
-  background: #aa3311;
-  color: white; }
+  background: #eeddcc;
+  color: black; }
   .footer a {
-    color: white; }
+    color: black; }
 
 .github_cl {
-  color: white; }
+  color: #721779; }
 
 .gmaps_cl {
   color: #cc5641; }
@@ -68,3 +68,9 @@ body {
 
 .leaflet_cl {
   color: #bbdd66; }
+
+img.huechange {
+  filter: hue-rotate(120deg); }
+
+.table_rollover_bold {
+  font-weight: bold; }

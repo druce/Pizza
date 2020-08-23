@@ -4,16 +4,15 @@ from flask import Response
 from flask_cors import CORS, cross_origin
 
 latlong_enabled = False
+cachedir = 'cache/'
 # run pizza.ipynb using a flask server
 # http://localhost:8181/query?location=brooklynheights&keyword=coffee
 
 # TODO:
-# merge all pickles and retrain dedupe on all
-# add nratings_gmaps, nratings_yelp, nratings_foursquare to pickle, to api json, and maps
-# add rank and distance to marker popup etxt 
 # add links from table to map, need to walk table DOM and add click or rollover event http://jsfiddle.net/74g6ts4r/
 # install all requirements via npm - retry build step
 # npm script to make dist
+# maybe train dedupe with the keyword. currently train all together but we never dedupe a frame w/both coffee+pizza
 
 #######################################################
 # home
@@ -59,7 +58,7 @@ def home():
     # dedupe_df.to_pickle("results.pkl")
 
     # for demo, don't use API calls
-    dedupe_df = pd.read_pickle("pizza_brooklynheights.pkl")
+    dedupe_df = pd.read_pickle("cache/pizza_brooklynheights.pkl")
     tablecols = ['name', 'address', 'distance', 'gmaps_rating', 'yelp_rating', 'foursquare_rating', 'lat', 'lng']
     tmpdf = dedupe_df.sort_values('bayes_score', ascending=False).reset_index(drop=True)[tablecols]
     tmpdf['rank'] = tmpdf.index + 1
@@ -91,16 +90,22 @@ def query():
 
         # for demo, don't use API calls
         if location and keyword:
-            picklefile = "%s_%s.pkl" % (keyword, location)
+            picklefile = "%s%s_%s.pkl" % (cachedir, keyword, location)
             dedupe_df = pd.read_pickle(picklefile)
-            tablecols = ['name', 'address', 'distance', 'gmaps_rating', 'yelp_rating', 'foursquare_rating', 'lat', 'lng']
-            tmpdf = dedupe_df.sort_values('bayes_score', ascending=False).reset_index(drop=True)[tablecols]
+            tablecols = ['name', 'address', 'distance', 'gmaps_rating', 'gmaps_nratings',
+                         'yelp_rating', 'yelp_nratings', 'foursquare_rating', 'foursquare_nratings',
+                         'lat', 'lng']
+            tmpdf = dedupe_df.sort_values(
+                'bayes_score', ascending=False).reset_index(drop=True)[tablecols]
             tmpdf['rank'] = tmpdf.index + 1
-            tmpdf['distance'] = tmpdf['distance'].apply(lambda d: "%1.1f km" % (float(d)))
+            tmpdf['distance'] = tmpdf['distance'].apply(
+                lambda d: "%1.1f km" % (float(d)))
             tmpdf['address'] = tmpdf['address'].apply(lambda a: a[:25])
             tmpdf['name'] = tmpdf['name'].apply(lambda a: a[:25])
             tmpdf = tmpdf[['rank'] + tablecols]
-            tmpdf.columns=['Rank', 'Name', 'Address', 'Distance', 'Google Maps', 'Yelp', 'Foursquare', 'Lat', 'Lng']
+            tmpdf.columns = ['Rank', 'Name', 'Address', 'Distance',
+                             'Google Maps', 'Gratings', 'Yelp', 'Yratings', 'Foursquare', 'Fratings',
+                             'Lat', 'Lng']
             retval = tmpdf.to_json(orient="records")
             return Response(retval, mimetype='application/json')
         elif latlong_enabled and lat and lng:

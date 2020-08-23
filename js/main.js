@@ -13,6 +13,23 @@ function set_bg() {
     $('.overlay').width(Math.max($("body").width(), window.innerWidth));
 }
 
+function set_hovers() {
+    // set hover function on each data row
+    // highlight row, popup on map 
+    $('#output_table > tbody > tr').hover(
+        function () {
+            $(this).addClass('font-weight-bold');
+            id = $(this).find('td').first().text() - 1;
+            document.markers[id].openPopup()
+        },
+        function () {
+            $(this).removeClass('font-weight-bold');
+            id = $(this).find('td').first().text() - 1;
+            document.markers[id].closePopup()
+        }
+    );
+}
+
 function markerFunction(id) {
     // popup based on title. given marker title, loop through all markers and popup specified 
     for (var i in document.markers) {
@@ -68,6 +85,7 @@ function searchClick() {
                     { "data": "Foursquare", "orderable": true, "className": "text-right" }
                 ]
             });
+
             $.get(new_url, function (data) {
                 // show data for debug
                 // for (var i = 0, len = data.length; i < len; i++) {
@@ -77,6 +95,7 @@ function searchClick() {
                 document.pizza_data_table.rows.add(data);
                 document.pizza_data_table.draw();
                 set_bg();
+                set_hovers();    
                 getMap(location_val, data);
                 // ideally take each row and give cell a link or rollover to popup corresponding marker on map
                 // alert works but need more jquery mojo for the rollover
@@ -93,6 +112,7 @@ function searchClick() {
                 document.pizza_data_table.rows.add(data);
                 document.pizza_data_table.draw();
                 set_bg();
+                set_hovers();    
                 getMap(location_val, data);
             });
         }
@@ -117,34 +137,41 @@ function getMap(location_val, data) {
         accessToken: accessToken
     }).addTo(document.mymap);
 
-    outstr="";
+    // origin of search
+    L.marker([document.locations[location_val]['coords'][0], document.locations[location_val]['coords'][1]]).addTo(document.mymap).bindPopup("Search location");
+
+    document.markers =  [];
     for (var i = 0, len = data.length; i < len; i++) {
         // console.log(data[i]);
         rating_html = '';
         if (data[i]['Google Maps'] != null) {
-            rating_html += "<dt>Google rating</dt><dd>" +data[i]['Google Maps'] + "</dd> ";
+            rating_html += "<dt>Google rating</dt><dd>" + data[i]['Google Maps'] + " (" + data[i]['Gratings'] + " ratings)</dd> ";
         }
         if (data[i]['Yelp'] != null) {
-            rating_html += "<dt>Yelp rating</dt><dd>" + data[i]['Yelp'] + "</dd> ";
+            rating_html += "<dt>Yelp rating</dt><dd>" + data[i]['Yelp'] + " (" + data[i]['Yratings'] + " ratings)</dd> ";
         }
         if (data[i]['Foursquare'] != null) {
-            rating_html += "<dt>Foursquare rating</dt><dd>" + data[i]['Foursquare'] + "</dd> ";
+            rating_html += "<dt>Foursquare rating</dt><dd>" + data[i]['Foursquare'] + " (" + data[i]['Fratings'] + " ratings)</dd> ";
         }
         
         popup_html = " \
 <dl> \
+<dt>Rank: " + data[i].Rank + "</dt><dd></dd> \
 <dt>Name</dt><dd>" + data[i].Name + "</dd> \
 <dt>Address</dt><dd>" + data[i].Address + "</dd> \
+<dt>Distance</dt><dd>" + data[i].Distance + "</dd> \
 " + rating_html + " \
 </dl> \
 "
         var marker = L.marker([data[i].Lat,  data[i].Lng], {title:"marker_"+i}).addTo(document.mymap).bindPopup(popup_html);
+        marker._icon.classList.add("huechange");
         marker.on('mouseover',function(ev) {
             this.openPopup();
         });
         marker.on('mouseout',function(ev) {
             this.closePopup();
         });
+        document.markers.push(marker);
     }
 }
 
