@@ -1,6 +1,6 @@
-# How To Deploy Container To AWS Elastic Container Service
+# How to Deploy a Container to AWS Elastic Container Service
 
-Based on AWS document here: [Tutorial: Creating a Cluster with a Fargate Task Using the Amazon ECS CLI](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-cli-tutorial-fargate.html)
+Based on this AWS document: [Tutorial: Creating a Cluster with a Fargate Task Using the Amazon ECS CLI](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-cli-tutorial-fargate.html)
 
 1) [Install and configure AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html)
 
@@ -25,47 +25,52 @@ aws iam --region us-east-1 attach-role-policy --role-name ecsTaskExecutionRole -
 
 ```
 
-4) Configure credentials, default cluster:
+4) Configure credentials and default cluster:
 ```
 ecs-cli configure profile --access-key <access-key> --secret-key <secret-key> --profile-name pizza-profile
+INFO[0000] Saved ECS CLI profile configuration default.
+
 ecs-cli configure --cluster pizza --default-launch-type FARGATE --config-name pizza --region us-east-1
+INFO[0000] Saved ECS CLI cluster configuration pizza.
+
 ecs-cli up --cluster-config pizza --ecs-profile pizza-profile
+INFO[0000] Created cluster                               cluster=pizza region=us-east-1
+INFO[0061] Waiting for your cluster resources to be created...
+INFO[0062] Cloudformation stack status                   stackStatus=CREATE_IN_PROGRESS
+INFO[0122] Cloudformation stack status                   stackStatus=CREATE_IN_PROGRESS
+VPC created: vpc-123456789012e1234
+Subnet created: subnet-1234567890abcdef
+Subnet created: subnet-fedcba0987654321
+Cluster creation succeeded.
 ```
 
 Note that this doesn't create your own personal cluster but takes advantage of the Fargate container service.
 
-Take note of info on cluster,  vpc and subnets:
+Take note of info on cluster,  vpc and subnets reported.
 
-```bash
-
-VPC created: vpc-123456789012e1234
-VPC created: vpc-123456789012e1234
-Subnet created: subnet-1234567890abcdef
-Subnet created: subnet-fedcba0987654321
-
-```
-
-Take note of security group
+Get security group
 ```bash
 
 aws ec2 describe-security-groups --filters Name=vpc-id,Values=vpc-123456789012e1234 --region us-east-1
 
 ```
+Take note of e.g. `"GroupId": "sg-1111222233334444"`
 
 5) Configure security group to allow inbound on the desired port, using the security group-id reported (and correct port and region):
 ```bash
-aws ec2 authorize-security-group-ingress --group-id <group-id> --protocol tcp --port 8181 --cidr 0.0.0.0/0 --region us-east-1
+aws ec2 authorize-security-group-ingress --group-id sg-1111222233334444 --protocol tcp --port 8181 --cidr 0.0.0.0/0 --region us-east-1
 
 ```
 
-6) Create repository (not sure if this is created by default):
+6) Create container repository 
 ```bash
 aws ecr create-repository --repository-name pizza
 aws ecr describe-repositories
 
 ```
+Take note of repo URI.
 
-7) Push Docker image to ECS:
+7) Push Docker image to ECS (replace with your repo URI, region):
 ```bash
 docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) 123412341234.dkr.ecr.us-east-1.amazonaws.com
 docker build . -t pizza
@@ -73,7 +78,6 @@ docker tag pizza:latest 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:lates
 docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
 
 ```
-
 
 8) Start the container:
 
@@ -86,8 +90,22 @@ ecs-cli compose --project-name pizza service up --create-log-groups --cluster-co
 
 ```
 
-This will take a minute and show some log messages. Go to AWS ECS console and you should see your cluster running.
+This will take a minute and show some log messages.
 
+```bash
+
+INFO[0000] Using ECS task definition                     TaskDefinition="pizza:1"
+INFO[0000] Auto-enabling ECS Managed Tags
+INFO[0016] (service pizza) has started 1 tasks: (task cc0dce4d34054f63b3c734b7d9071189).  timestamp="2020-08-23 19:11:14 +0000 UTC"
+INFO[0066] Service status                                desiredCount=1 runningCount=1 serviceName=pizza
+INFO[0066] ECS Service has reached a stable state        desiredCount=1 runningCount=1 serviceName=pizza
+INFO[0066] Created an ECS service                        service=pizza taskDefinition="pizza:1"
+
+```
+
+Go to AWS Elastic Container Service console and you should see your cluster running.
+
+![Image of ECS console](images/ECS.png)
 
 9) Get info on your container:
 ```bash
@@ -97,7 +115,9 @@ Healthpizza/0fec210e48734bf1bfca123a88e3a2f1/web  RUNNING  3.237.198.63:8181->81
 
 ```
 
-Note the IP address and port. You should now be able access the service on IP:port.
+Note the IP address and port. You should now be able access the service on IP:port. For pizza try
+http://3.237.198.63:8181/query?location=brooklynheights&keyword=pizza
+										    
 
 Note the task id and view logs
 ```bash
@@ -109,10 +129,6 @@ ecs-cli logs --task-id 0fec210e48734bf1bfca123a88e3a2f1 --follow --cluster-confi
 10) Shut it down:
 ```bash
 
-ecs-cli compose --project-name tutorial service down --cluster-config tutorial --ecs-profile tutorial-profile
+ecs-cli compose --project-name pizza service down --cluster-config pizza --ecs-profile pizza-profile
 
 ```
-
-
-
-
