@@ -176,8 +176,8 @@ function getMap(location_val, data) {
 }
 
 $(document).ready(function () {
-    // document.pizza_url = '3.237.198.63:8181';
-    document.pizza_url = 'localhost:8181';
+    document.pizza_url = '3.231.21.40:8181';
+    //document.pizza_url = 'localhost:8181';
     set_bg();
 
     document.locations = {
