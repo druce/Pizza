@@ -9,7 +9,6 @@ cachedir = 'cache/'
 # http://localhost:8181/query?location=brooklynheights&keyword=coffee
 
 # TODO:
-# add links from table to map, need to walk table DOM and add click or rollover event http://jsfiddle.net/74g6ts4r/
 # install all requirements via npm - retry build step
 # npm script to make dist
 # maybe train dedupe with the keyword. currently train all together but we never dedupe a frame w/both coffee+pizza

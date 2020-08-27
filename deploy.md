@@ -126,7 +126,26 @@ ecs-cli logs --task-id 0fec210e48734bf1bfca123a88e3a2f1 --follow --cluster-confi
 
 ```
 
-10) Shut it down:
+10) Update the docker image
+```bash
+
+docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) 123412341234.dkr.ecr.us-east-1.amazonaws.com
+docker build . -t pizza
+docker tag pizza:latest 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
+docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
+
+```
+
+- Go to ECS console https://console.aws.amazon.com/ecs/home?region=us-east-1
+- Click on cluster e.g. pizza
+- Click on service checkbox for Pizza
+- Choose 'Update' from dropdown
+- On next page click 'Force new deployment', and leave other settings the same , and Update Service
+
+![Image of ECS console](images/cluster_update.png)
+![Image of ECS console](images/force.png)
+xxx
+11) Shut it down:
 ```bash
 
 ecs-cli compose --project-name pizza service down --cluster-config pizza --ecs-profile pizza-profile
