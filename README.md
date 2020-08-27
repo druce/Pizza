@@ -19,10 +19,7 @@ See `requirements.txt` for additional requirements.
 
 Run `pizza.ipynb` in Jupyter.
 
-Web app also available: to run locally with docker app server:
-- `docker build . -t pizza`
-- `docker run -p 8181:80 --name pizza --rm pizza &`
-- open index.html or `npm start` (for development, this also runs node services to compile `styles.scss` to `styles.css` and refresh automatically on changes to index.html or main.js)
+Web app also available: to run locally with docker app server: `runlocal.sh`.
 
 To deploy the web app to Amazon Container Service see [`deploy.md`](deploy.md) 
 
