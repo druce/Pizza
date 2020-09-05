@@ -1,12 +1,11 @@
-version: '3'
+version: "3.8"
 services:
-  web:
-    image: 840464442216.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
+  pizza:
+    build: .
     ports:
       - "8181:8181"
-    logging:
-      driver: awslogs
-      options: 
-        awslogs-group: pizza
-        awslogs-region: us-east-1
-        awslogs-stream-prefix: web
+    volumes:
+      - .:/code
+    environment:
+      FLASK_ENV: development
+      
