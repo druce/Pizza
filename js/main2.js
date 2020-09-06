@@ -45,83 +45,76 @@ function markerFunction(id) {
 
 function searchClick() {
 
-    key_val = $('#keyword_button').text().toLowerCase();
-    key_val = key_val.replace(/\s/g, "");
-    location_val = $('#location_button').text().toLowerCase();
-    location_val = location_val.replace(/\s/g, "");
+    key_val = $('#keyword_input').val();
+    lat_val = $('#latitude_input').val();
+    lng_val = $('#longitude_input').val();
 
-    if (key_val == 'keyword') {
-        alert('Choose a search keyword from the keywords dropdown');
-    }
-    else if (location_val == 'location') {
-        alert('Choose a location from the locations dropdown');
+    new_url = "http://" + document.pizza_url + "/query?lat=" + lat_val + "&lng=" + lng_val + "&keyword=" + key_val;
+
+    if (!$.fn.DataTable.isDataTable('#output_table')) {  // first call, create table
+        $("#output_table").html('                <thead> \
+                    <tr style="text-align: right;"> \
+                        <th>Rank</th> \
+                        <th>Name</th> \
+                        <th>Address</th> \
+                        <th>Distance</th> \
+                        <th><i class="fab fa-google fa-lg gmaps_cl"> </i> Google</th> \
+                        <th><i class="fab fa-yelp fa-lg yelp_cl"> </i> Yelp</th> \
+                        <th><i class="fab fa-foursquare fa-lg foursquare_cl"> </i> Foursquare</th> \
+                    </tr> \
+                </thead> \
+                ');
+        document.pizza_data_table = $('#output_table').DataTable({
+            "searching": false,
+            "lengthChange": false,
+            "paging": false,
+            "info": false,
+            "columns": [
+                { "data": "Rank", "orderable": true },
+                { "data": "Name", "orderable": true },
+                { "data": "Address", "orderable": true },
+                { "data": "Distance", "orderable": true, "className": "text-right" },
+                { "data": "Google Maps", "orderable": true, "className": "text-right" },
+                { "data": "Yelp", "orderable": true, "className": "text-right" },
+                { "data": "Foursquare", "orderable": true, "className": "text-right" }
+            ]
+        });
+
+        $.get(new_url, function (data) {
+            // show data for debug
+            // for (var i = 0, len = data.length; i < len; i++) {
+            //     console.log(data[i]);
+            // }
+            document.pizza_data_table.clear();
+            document.pizza_data_table.rows.add(data);
+            document.pizza_data_table.draw();
+            set_bg();
+            set_hovers();    
+            getMap(lat_val, lng_val, data);
+        });
     }
     else {
-        new_url = "http://" + document.pizza_url + "/query?location=" + location_val + "&keyword=" + key_val
-        if (!$.fn.DataTable.isDataTable('#output_table')) {  // first call, create table
-            $("#output_table").html('                <thead> \
-                        <tr style="text-align: right;"> \
-                            <th>Rank</th> \
-                            <th>Name</th> \
-                            <th>Address</th> \
-                            <th>Distance</th> \
-                            <th><i class="fab fa-google fa-lg gmaps_cl"> </i> Google</th> \
-                            <th><i class="fab fa-yelp fa-lg yelp_cl"> </i> Yelp</th> \
-                            <th><i class="fab fa-foursquare fa-lg foursquare_cl"> </i> Foursquare</th> \
-                        </tr> \
-                    </thead> \
-                    ');
-            document.pizza_data_table = $('#output_table').DataTable({
-                "searching": false,
-                "lengthChange": false,
-                "paging": false,
-                "info": false,
-                "columns": [
-                    { "data": "Rank", "orderable": true },
-                    { "data": "Name", "orderable": true },
-                    { "data": "Address", "orderable": true },
-                    { "data": "Distance", "orderable": true, "className": "text-right" },
-                    { "data": "Google Maps", "orderable": true, "className": "text-right" },
-                    { "data": "Yelp", "orderable": true, "className": "text-right" },
-                    { "data": "Foursquare", "orderable": true, "className": "text-right" }
-                ]
-            });
-
-            $.get(new_url, function (data) {
-                // show data for debug
-                // for (var i = 0, len = data.length; i < len; i++) {
-                //     console.log(data[i]);
-                // }
-                document.pizza_data_table.clear();
-                document.pizza_data_table.rows.add(data);
-                document.pizza_data_table.draw();
-                set_bg();
-                set_hovers();    
-                getMap(location_val, data);
-            });
-        }
-        else {
-            $.get(new_url, function (data) {
-                document.pizza_data_table.clear();
-                document.pizza_data_table.rows.add(data);
-                document.pizza_data_table.draw();
-                set_bg();
-                set_hovers();    
-                getMap(location_val, data);
-            });
-        }
+        $.get(new_url, function (data) {
+            document.pizza_data_table.clear();
+            document.pizza_data_table.rows.add(data);
+            document.pizza_data_table.draw();
+            set_bg();
+            set_hovers();    
+            getMap(lat_val, lng_val, data);
+        });
     }
 }
 
-function getMap(location_val, data) {
+function getMap(lat_val, lng_val, data) {
+    coords = [Number(lat_val), Number(lng_val)]
+
     $("#leaflet_map").css("height", "384px");
     // location_val = $('#location_button').text().toLowerCase().replace(/\s/g, "");
-    location_obj = document.locations[location_val];
     var accessToken = 'pk.eyJ1IjoiZHJ1Y2V2IiwiYSI6ImNqbWt4YmJ6ejAyYXcza3A1djhya254ZXMifQ.ZkDU7jNP3QGicJpGRRMF2Q';
     if (document.hasOwnProperty('mymap')) {
         document.mymap.remove()
     }
-    document.mymap = L.map('leaflet_map').setView(location_obj.coords, 14);
+    document.mymap = L.map('leaflet_map').setView(coords, 14);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
@@ -132,7 +125,7 @@ function getMap(location_val, data) {
     }).addTo(document.mymap);
 
     // origin of search
-    L.marker(document.locations[location_val]['coords']).addTo(document.mymap).bindPopup("Search location");
+    L.marker(coords).addTo(document.mymap).bindPopup("Search location");
 
     document.markers =  [];
     for (var i = 0, len = data.length; i < len; i++) {

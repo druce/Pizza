@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 
+    send correct js from flask and implement table
+    insert map with leaflet.js 
+-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+        integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css"
+        integrity="sha512-f8mUMCRNrJxPBDzPJx3n+Y5TC5xp6SmStstEfgsDXZJTcxBakoB5hvPLhAfJKa9rCvH+n3xpJ2vQByxLk4WP2g=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin=""/>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">    
+    <title>Pizza Pizza Pizza</title>
+</head>
+
+<body style="background-image: 'images/pizza.jpg';">
+    <div class="overlay"></div>
+
+    <nav class="navbar navbar-expand-sm navbar-static-top" role="navigation">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
+                <span class="navbar-toggler-icon"><i class="fas fa-bars" style="color: white;"></i></span>
+            </button>
+
+            <a class="navbar-brand" href="/">StreetEYE</a>
+
+            <div class="collapse navbar-collapse" id="Navbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="http://blog.streeteye.com">
+                            <i class="fas fa-rss-square"></i> Blog
+                        </a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-tools"></i> Projects
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#">Pizza Pizza Pizza</a>
+                            <a class="dropdown-item" href="http://www.streeteye.com/namegenerator/">Hedge Fund Name Generator</a>
+                            <a class="dropdown-item" href="http://www.streeteye.com/static/fintwit201901/">FinTwit Graph</a>
+                            <a class="dropdown-item" href="http://blog.streeteye.com/blog/2016/08/safe-retirement-spending-using-certainty-equivalent-cash-flow-and-tensorflow/">Certainty-Equivalent Retirement Spending</a>
+                            <a class="dropdown-item" href="http://www.streeteye.com/calculator/">Cat Food Calculator</a>
+                          </div>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-address-card fa-lg"></i> About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="jumbotron p-2">
+        <div class="container">
+            <div class="row row-header">
+                <div class="col-12">
+                    <h1 id="page_title">Pizza Pizza Pizza</h1>
+                    <p>Search for pizza (or coffee, or ice cream) in your local area using multiple crowdsourced review platforms (Google, Yelp, Foursquare)</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container h-100" id="content">
+        <div class="row row-content h-100 justify-content-center align-items-center">
+            <form class="col-12 col-sm-6 offset-sm-1">
+                <div class="form-row">
+                    <div class="form-group pr-1">
+                        <label for="keyword_input">Keyword</label>
+                        <input id="keyword_input" name="keyword" type="text" value="Coffee" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group pr-1">
+                        <label for="latitude_input">Latitude</label>
+                        <input id="latitude_input" name="lat" type="text" value="40.6915812" />
+                    </div>
+                </div>
+                <div class="form-row">
+                        <div class="form-group pr-1">
+                        <label for="longitude_button">Latitude</label>
+                        <input id="longitude_input" name="lng" type="text" value="-73.9954095" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-danger" id="search_button">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row row-content justify-content-center align-items-center">
+            <div class="col-12 col-md-10" id="leaflet_map">
+            </div>
+          </div>
+
+          <div class="row row-content justify-content-center align-items-center" id="output">
+            <div class="col-12 col-md-10 pb-5">
+              <table id="output_table" class="table table-striped table-bordered pb-2" style="width:100%">
+              </table>
+            </div>
+          </div>
+        </div>
+
+    <footer class="footer fixed-bottom">
+        <div class="container">
+          <div class="row justify-content-center align-items-center">
+            <div class="col-auto">Made with
+                <i class="fab fa-github fa-lg github_cl"> </i> <a href="https://github.com/druce/pizza" class="footer_link"> GitHub</a>
+                <i class="fab fa-google fa-lg gmaps_cl"> </i> <a href="https://www.google.com/maps" class="footer_link">Google Maps</a>
+                <i class="fab fa-yelp fa-lg yelp_cl"> </i> <a href="https://www.yelp.com/" class="footer_link">Yelp</a>
+                <i class="fab fa-foursquare fa-lg foursquare_cl"> </i> <a href="https://foursquare.com/city-guide" class="footer_link">Foursquare</a>
+                <i class="fas fa-leaf fa-lg leaflet_cl"></i> <a href="https://leafletjs.com/">Leaflet</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>        
+    <script src="js/jquery.dataTables.min.js"></script>        
+    <script src="js/main2.js"></script>
+</body>
+
+</html>

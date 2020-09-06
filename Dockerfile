@@ -8,7 +8,7 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY . /app
-COPY apikeys /app/apikeys
+COPY secrets /app/secrets
 
 EXPOSE 8181
 ENTRYPOINT [ "python3" ]
