@@ -253,9 +253,9 @@ This will take a couple of minutes but should run all the steps specified above.
 docker compose ps
 docker compose logs
 FRONTEND_IMG=123412341234.dkr.ecr.us-east-1.amazonaws.com/drucev/pizza:latest docker compose convert
-
+docker compose down
 
 ```
-The last outputs the CloudFormation JSON to run the container in the service, with all the network setup, security group and rules etc.
+`docker compose convert` outputs the CloudFormation JSON to run the container in the ECS service, with all the network setup, security group and rules etc.
 
 And you should also be able to see it running in your AWS console.
