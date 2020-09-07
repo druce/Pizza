@@ -162,7 +162,7 @@ Docker and AWS have been integrating and streamlining this process. In theory yo
 
 1) As of this writing (9/2020) you need the Edge Docker Release ([Mac](https://docs.docker.com/docker-for-mac/edge-release-notes/) or [Windows](https://docs.docker.com/docker-for-windows/edge-release-notes/))
 		 
-2) Have a default vpc in your EC2 region. If you have a newer AWS account this should be set up by default. If you have an ancient AWS account you may need to [convert from EC2-Classic to VPC](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html#convert-ec2-classic-account), or use a new region with now old-style resources.
+2) Have a default VPC in your EC2 region. If you have a newer AWS account this should be set up by default. If you have an ancient AWS account you may need to [convert from EC2-Classic to VPC](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html#convert-ec2-classic-account), or use a new region with no old-style resources.
 
 3) Enable new ARN format: [see here](https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east12#/settings).
 
@@ -175,15 +175,18 @@ aws configure --profile ecs
 
 ```
 
-2) Create a docker context for ecs
+2) Create a Docker context for ecs
 ```bash
 
 docker context create ecs ecs
 
 ```
-Choose your AWS named profile created above i.e. ecs.
-Type your region e.g. us-east-1
-Hit enter
+
+Choose your AWS named profile created above i.e. `ecs`.
+
+Type your region e.g. `us-east-1`
+
+Hit enter a couple of times.
 
 ```bash
 
