@@ -1,5 +1,7 @@
 # How to Deploy a Container to AWS Elastic Container Service
 
+## The harder way
+
 Based on this AWS document: [Tutorial: Creating a Cluster with a Fargate Task Using the Amazon ECS CLI](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-cli-tutorial-fargate.html)
 
 1) [Install and configure AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html)
@@ -72,7 +74,7 @@ Take note of repo URI.
 
 7) Push Docker image to ECS (replace with your repo URI, region):
 ```bash
-docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) 123412341234.dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region us-east-1 | docker login -u AWS --password-stdin 123412341234.dkr.ecr.us-east-1.amazonaws.com
 docker build . -t pizza
 docker tag pizza:latest 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
 docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
@@ -144,10 +146,110 @@ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
 
 ![Image of ECS console](images/cluster_update.png)
 ![Image of ECS console](images/force.png)
-xxx
+
 11) Shut it down:
 ```bash
 
 ecs-cli compose --project-name pizza service down --cluster-config pizza --ecs-profile pizza-profile
+
+```
+
+## The easier way
+
+Docker and AWS have been integrating and streamlining this process. In theory you should be able to say `docker compose up` and run all the above steps automatically.
+
+#### Prerequisites
+
+1) As of this writing (9/2020) you need the Edge Docker Release ([Mac](https://docs.docker.com/docker-for-mac/edge-release-notes/) or [Windows](https://docs.docker.com/docker-for-windows/edge-release-notes/))
+		 
+2) Have a default vpc in your EC2 region. If you have a newer AWS account this should be set up by default. If you have an ancient AWS account you may need to [convert from EC2-Classic to VPC](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html#convert-ec2-classic-account), or use a new region with now old-style resources.
+
+3) Enable new ARN format: [see here](https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east12#/settings).
+
+#### Steps
+
+1) Create a new AWS CLI profile for ECS (access key, secret, region, output format e.g. JSON)
+```bash
+
+aws configure --profile ecs
+
+```
+
+2) Create a docker context for ecs
+```bash
+
+docker context create ecs ecs
+
+```
+Choose your AWS named profile created above i.e. ecs.
+Type your region e.g. us-east-1
+Hit enter
+
+```bash
+
+(base) drucev@MacBook-Pro ~/projects/dockertest/docker-ecs-compose (main*) $ docker context create ecs ecs
+? Select AWS Profile ecs
+? Region us-east-1
+? Enter credentials No
+Successfully created ecs context "ecs"
+
+```
+
+Now you can switch between docker profiles with
+```bash
+		   
+docker context use ecs
+docker context use default
+
+```
+
+See https://docs.docker.com/engine/reference/commandline/context/ .
+
+3) Build the Docker image similar to above:
+```bash
+   
+docker context use default
+docker build . -t pizza
+docker tag pizza:latest 123412341234.dkr.ecr.us-east-2.amazonaws.com/pizza:latest
+
+```
+
+4) Push to elastic container repository similar to above
+```bash
+
+aws ecr get-login-password --region us-east-2 | docker login -u AWS --password-stdin 123412341234.dkr.ecr.us-east-2.amazonaws.com
+aws ecr create-repository --profile ecs --repository-name pizza
+docker push 123412341234.dkr.ecr.us-east-2.amazonaws.com/pizza:latest
+
+```
+
+5) See docker-compose.yml, which specifies image: $(FRONTEND_IMG)
+```bash
+
+version: "3.8"
+services:
+  pizza:
+    image: ${FRONTEND_IMG}
+    ports:
+      - "8181:8181"
+
+```
+
+Run the image with:
+```bash
+
+docker context use ecs
+FRONTEND_IMG=123412341234.dkr.ecr.us-east-2.amazonaws.com/drucev/pizza:latest docker compose up
+
+```
+
+This will take a couple of minutes but should run all the steps specified above. You can then do 
+
+```bash
+
+docker compose ps
+docker compose logs
+FRONTEND_IMG=123412341234.dkr.ecr.us-east-2.amazonaws.com/drucev/pizza:latest docker compose convert
+
 
 ```
