@@ -252,7 +252,7 @@ This will take a couple of minutes but should run all the steps specified above.
 
 You can then do 
 
-``bash
+```bash
 
 docker compose ps
 ID                                NAME                REPLICAS            PORTS
