@@ -1,5 +1,7 @@
 # Deploy a Microservice to AWS Elastic Container Service: The Harder Way and the Easier Way
 
+A while back I made this [Pizza service ](http://www.streeteye.com/static/Pizza/#) weekend project and I thought I could just press a button in AWS and deploy it in the cloud. It turned out to be… more complicated. With the latest version of Docker it's getting easier. Here's the harder (old) way and the easier (new) way. Hopefully in the not too-distant future it will be as simple as saying `docker compose up` without much additional configurtion, or submitting a form pointing to your Docker container.
+
 ## The harder way
 
 Based on this AWS document: [Tutorial: Creating a Cluster with a Fargate Task Using the Amazon ECS CLI](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-cli-tutorial-fargate.html)
