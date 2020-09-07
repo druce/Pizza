@@ -275,3 +275,4 @@ docker compose down
 `docker compose convert` outputs the CloudFormation JSON to run the container in the ECS service, with all the network setup, security group and rules etc.
 
 
+That's it! Deploying a public container still seems a little rough around the edges but it's getting better.
