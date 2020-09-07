@@ -1,4 +1,4 @@
-# How to Deploy a Container to AWS Elastic Container Service
+# Deploy a Microservice to AWS Elastic Container Service: The Harder Way and the Easier Way
 
 ## The harder way
 
