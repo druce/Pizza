@@ -217,7 +217,7 @@ docker tag pizza:latest 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:lates
 
 ```
 
-4) Push to elastic container repository similar to above
+4) Push to Elastic Container Repository similar to above
 ```bash
 
 aws ecr get-login-password --region us-east-1 | docker login -u AWS --password-stdin 123412341234.dkr.ecr.us-east-1.amazonaws.com
@@ -226,7 +226,7 @@ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
 
 ```
 
-5) See [new-docker-compose.yml](new-docker-compose.yml), which specifies image: $(FRONTEND_IMG). Rename or copy to docker-compose.yml.
+5) See [new-docker-compose.yml](new-docker-compose.yml), which specifies image: $(FRONTEND_IMG). (or you can hard-code it.) Rename or copy to docker-compose.yml.
 ```bash
 
 version: "3.8"
