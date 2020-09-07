@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  pizza:
+    image: ${FRONTEND_IMG}
+    ports:
+      - "8181:8181"
+      

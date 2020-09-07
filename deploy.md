@@ -83,7 +83,7 @@ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
 
 8) Start the container:
 
-- Make docker-compose.yml file (see [example](docker-compose.yml). Specify correct ECR image and region)
+- Make docker-compose.yml file (see [example](ecs-docker-compose.yml). Specify correct ECR image and region)
 - Make ecs-params.yml file (see [example](ecs-params.yml). Specify correct subnets and security group)
 
 ```bash
@@ -156,13 +156,13 @@ ecs-cli compose --project-name pizza service down --cluster-config pizza --ecs-p
 
 ## The easier way
 
-Docker and AWS have been integrating and streamlining this process. In theory you should be able to say `docker compose up` and run all the above steps automatically.
+Docker and AWS have been working to integrate and streamline this process. In theory, modulo configuring region and credentials, you should be able to say `docker compose up` and run all the above steps automatically.
 
 #### Prerequisites
 
 1) As of this writing (9/2020) you need the Edge Docker Release ([Mac](https://docs.docker.com/docker-for-mac/edge-release-notes/) or [Windows](https://docs.docker.com/docker-for-windows/edge-release-notes/))
 		 
-2) Have a default VPC in your EC2 region. If you have a newer AWS account this should be set up by default. If you have an ancient AWS account you may need to [convert from EC2-Classic to VPC](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html#convert-ec2-classic-account), or use a new region with no old-style resources.
+2) You need a default VPC in your EC2 region. If you have a newer AWS account this should be set up by default. If you have an ancient AWS account you may need to [convert from EC2-Classic to VPC](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html#convert-ec2-classic-account), or use a new region with no old-style resources.
 
 3) Enable new ARN format: [see here](https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east12#/settings).
 
@@ -226,7 +226,7 @@ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
 
 ```
 
-5) See docker-compose.yml, which specifies image: $(FRONTEND_IMG)
+5) See [new-docker-compose.yml](new-docker-compose.yml), which specifies image: $(FRONTEND_IMG). Rename or copy to docker-compose.yml.
 ```bash
 
 version: "3.8"
@@ -238,24 +238,40 @@ services:
 
 ```
 
-Run the image with:
+If you previously created the 'pizza' app, go to the ECS console and delete the existing cluster and task. Run the image with:
 ```bash
 
 docker context use ecs
-FRONTEND_IMG=123412341234.dkr.ecr.us-east-1.amazonaws.com/drucev/pizza:latest docker compose up
+FRONTEND_IMG=123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest docker compose up
 
 ```
 
-This will take a couple of minutes but should run all the steps specified above. You can then do 
+This will take a couple of minutes but should run all the steps specified above.
+
+![Image of docker compose up](images/new_docker_compose_up.png)
+
+You can then do 
+
+``bash
+
+docker compose ps
+ID                                NAME                REPLICAS            PORTS
+pizza-PizzaService-9UKSYVKGPMX8   pizza               1/1                 PizzaLoadBalancer-c4f8d3de53d346be.elb.us-east-2.amazonaws.com:8181->8181/tcp
+
+```
+
+You should be able to connect to your service on the specified port. It may take a minute for DNS to propagate.
+
+You can also do:
 
 ```bash
 
-docker compose ps
 docker compose logs
 FRONTEND_IMG=123412341234.dkr.ecr.us-east-1.amazonaws.com/drucev/pizza:latest docker compose convert
 docker compose down
 
 ```
+
 `docker compose convert` outputs the CloudFormation JSON to run the container in the ECS service, with all the network setup, security group and rules etc.
 
-And you should also be able to see it running in your AWS console.
+
