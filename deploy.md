@@ -27,10 +27,12 @@ aws iam --region us-east-1 create-role --role-name ecsTaskExecutionRole --assume
 
 aws iam --region us-east-1 attach-role-policy --role-name ecsTaskExecutionRole --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
 
-```bash
+```
 
 4) Configure credentials and default cluster:
-```
+
+
+```bash
 ecs-cli configure profile --access-key <access-key> --secret-key <secret-key> --profile-name pizza-profile
 INFO[0000] Saved ECS CLI profile configuration default.
 
