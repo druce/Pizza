@@ -1,6 +1,6 @@
 # Deploy a Microservice to AWS Elastic Container Service: The Harder Way and the Easier Way
 
-A while back I made this [Pizza service ](http://www.streeteye.com/static/Pizza/#) weekend project and I thought I could just press a button in AWS and deploy it in the cloud. It turned out to be… more complicated. With the latest version of Docker it's getting easier. Here's the harder (old) way and the easier (new) way. Hopefully in the not too-distant future it will be as simple as saying `docker compose up` without much additional configurtion, or submitting a form pointing to your Docker container.
+A while back I made this [Pizza service ](http://www.streeteye.com/static/Pizza/#) weekend project and I thought I could just press a button in AWS and deploy it in the cloud. It turned out to be… more complicated. With the latest version of Docker it's getting easier. Here's the harder (old) way and the easier (new) way. Hopefully in the not too-distant future it will be as simple as saying `docker compose up` without much additional configuration, or just submitting a form pointing to your container repository.
 
 ## The harder way
 
@@ -27,7 +27,7 @@ aws iam --region us-east-1 create-role --role-name ecsTaskExecutionRole --assume
 
 aws iam --region us-east-1 attach-role-policy --role-name ecsTaskExecutionRole --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
 
-```
+```bash
 
 4) Configure credentials and default cluster:
 ```
@@ -50,7 +50,7 @@ Cluster creation succeeded.
 
 Note that this doesn't create your own personal cluster but takes advantage of the Fargate container service.
 
-Take note of info on cluster,  vpc and subnets reported.
+Take note of info on cluster VPC and subnets reported.
 
 Get security group
 ```bash
@@ -74,7 +74,7 @@ aws ecr describe-repositories
 ```
 Take note of repo URI.
 
-7) Push Docker image to ECS (replace with your repo URI, region):
+7) Push Docker image to ECR (replace with your repo URI, region):
 ```bash
 aws ecr get-login-password --region us-east-1 | docker login -u AWS --password-stdin 123412341234.dkr.ecr.us-east-1.amazonaws.com
 docker build . -t pizza
@@ -119,7 +119,7 @@ Healthpizza/0fec210e48734bf1bfca123a88e3a2f1/web  RUNNING  3.237.198.63:8181->81
 
 ```
 
-Note the IP address and port. You should now be able access the service on IP:port. For pizza try
+Note the IP address and port. You should now be able to access the service on IP:port. For pizza try
 http://3.237.198.63:8181/query?location=brooklynheights&keyword=pizza
 										    
 
@@ -228,7 +228,7 @@ docker push 123412341234.dkr.ecr.us-east-1.amazonaws.com/pizza:latest
 
 ```
 
-5) See [new-docker-compose.yml](new-docker-compose.yml), which specifies image: $(FRONTEND_IMG). (or you can hard-code it.) Rename or copy to docker-compose.yml.
+5) Create `docker-compose.yml`. See [new-docker-compose.yml](new-docker-compose.yml), which specifies image: $(FRONTEND_IMG). (or you can hard-code it.) Rename or copy to docker-compose.yml.
 ```bash
 
 version: "3.8"
