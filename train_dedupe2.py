@@ -68,10 +68,14 @@ if __name__ == '__main__':
     else:
         # Define the fields dedupe will pay attention to
         fields = [
+            {'field': 'category',
+             'variable name': 'category',
+             'type': 'String',
+             'has missing': False},
             {'field': 'shortname',
              'variable name': 'shortname',
              'type': 'String',
-             'has missing': True},
+             'has missing': False},
             {'field': 'address',
              'variable name': 'address',
              'type': 'String',

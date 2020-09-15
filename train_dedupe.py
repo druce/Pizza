@@ -10,9 +10,12 @@ for k, l, j in product(['pizza', 'coffee', 'icecream'],
     try:
         if tempdf is None:
             tempdf = pd.read_pickle(filename)
+            tempdf['category'] = k
             print(filename)
         else:
-            tempdf = pd.concat([tempdf, pd.read_pickle(filename)])
+            newdf = pd.read_pickle(filename)            
+            newdf['category'] = k
+            tempdf = pd.concat([tempdf, newdf])
             print(filename)
     except:
         print("missing ", filename)

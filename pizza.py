@@ -113,6 +113,8 @@ def gmaps_get_df(location_coords, keyword):
         gmaps_df['distance'] = gmaps_df \
             .apply(lambda row: distance((row['lat'], row['lng']), location_coords).km,
                    axis=1)
+        gmaps_df['category'] = keyword
+        
         return gmaps_df
 
 
@@ -132,6 +134,7 @@ def yelp_get_df(location_coords, keyword):
         yelp_df.columns = ['name', 'address', 'rating', 'nratings', 'lat', 'lng', 'url']
         yelp_df['distance'] = yelp_df.apply(lambda row: distance((row['lat'], row['lng']), location_coords).km,
                                             axis=1)
+        yelp_df['category'] = keyword
         if yelp_df.empty:
             return None
         else:
@@ -197,6 +200,7 @@ def foursquare_get_df(location_coords, keyword):
                                                                               row['lng']),
                                                                              location_coords).km,
                                                         axis=1)
+        foursquare_df['category'] = keyword
         if foursquare_df.empty:
             return None
         else:
@@ -237,7 +241,7 @@ def dedupe(dedupe_list, location_coords):
     venues_df['shortname'] = venues_df['name'].apply(lambda n: n[:25])
 
     # dedupe and assign cluster id
-    venues_df2 = pandas_dedupe.dedupe_dataframe(venues_df, ['shortname', 'address', ('latlong', 'LatLong')])
+    venues_df2 = pandas_dedupe.dedupe_dataframe(venues_df, ['category', 'shortname', 'address', ('latlong', 'LatLong')])
     venues_df['cluster'] = venues_df2['cluster id']
     venues_df = venues_df.sort_values(['cluster', 'source'])[['cluster', 'name', 'address', 'rating', 'nratings',
                                                               'lat', 'lng', 'distance', 'source']]
