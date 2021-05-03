@@ -14,9 +14,9 @@
         "watch:all": "parallelshell 'npm run watch:scss' 'npm run lite'",
         "clean": "rimraf dist",
         "imagemin": "imagemin images/* --out-dir='dist/images'",
-	"copyimages": "copyfiles -f images/* dist/images",
-	"usemin": "usemin index.html -d dist --htmlmin -o dist/index.html",
-	"build": "npm run clean && npm run copyimages && npm run usemin",
+        "copyimages": "copyfiles -f images/* dist/images",
+        "usemin": "usemin index.html -d dist --htmlmin -o dist/index.html",
+        "build": "npm run clean && npm run copyimages && npm run usemin",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
