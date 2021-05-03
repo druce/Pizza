@@ -8,7 +8,8 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY . /app
-COPY secrets /app/secrets
+# not needed if loading from cache
+# COPY secrets /app/secrets
 
 EXPOSE 8181
 ENTRYPOINT [ "python3" ]
