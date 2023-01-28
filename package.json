@@ -34,7 +34,7 @@
         "cssmin": "^0.4.3",
         "htmlmin": "0.0.7",
         "lite-server": "^2.5.4",
-        "minimist": "^1.2.5",
+        "minimist": "^1.2.6",
         "node-sass": "^7.0.0",
         "onchange": "^7.0.2",
         "parallelshell": "^3.0.2",
